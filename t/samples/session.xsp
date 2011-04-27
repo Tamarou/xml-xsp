@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="NULL" type="application/x-xsp"?>
+<xsp:page language="Perl"
+	xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+	xmlns:session="http://www.apache.org/1999/XSP/Session"
+ 	xmlns:ignore="http://www.w3.org/1999/xhtml">
+<html>
+    <head>
+        <title>Session Taglib demo</title>
+        <link rel="stylesheet" url="/axkit/stylesheets/style.css"/>
+    </head>
+    <body>
+        <h1>Session Taglib demo</h1>
+        <session:set-attribute>
+            <session:name>Test</session:name>
+            In fact, there are more attributes, but they
+            are internal and not accessible through this taglib.
+        </session:set-attribute>
+        <dl>
+            <dt><b>Session ID:</b></dt>
+            <dd><session:get-id as="node"/></dd>
+
+            <dt><b>Names:</b></dt>
+            <dd>
+                <xsp:expr>join(",",<session:get-attribute-names/>)</xsp:expr><br/>
+                <session:get-attribute-names as="node"/>
+            </dd>
+
+            <dt><b>Values:</b></dt>
+            <dd>
+                <ul><xsp:logic>
+                    foreach my $name (<session:get-attribute-names/>) {
+                        <li><b><em><xsp:expr>$name</xsp:expr></em></b>:
+                            <tt><session:get-attribute as="node">
+                                <session:name><xsp:expr>$name</xsp:expr></session:name>
+                            </session:get-attribute></tt>
+                        </li>
+                    }
+                </xsp:logic></ul>
+            </dd>
+
+            <dt><b>Creation Time:</b></dt>
+            <dd><session:get-creation-time as="string"/></dd>
+
+            <dt><b>Access Time:</b></dt>
+            <dd><session:get-last-accessed-time/></dd>
+
+            <dt><b>Inactive Interval:</b></dt>
+            <dd><session:get-max-inactive-interval/></dd>
+
+            <dt><b>Is new?</b></dt>
+            <dd><xsp:expr><session:is-new/>?"Yes":"No"</xsp:expr></dd>
+        </dl>
+
+        <p><a href="showsource.xsp?session.xsp">View Source</a></p>
+    </body>
+</html>
+</xsp:page>

@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="NULL" type="application/x-xsp"?>
+<xsp:page xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+          xmlns:demo="http://www.nsds.com/NS/xsp/demo/simple-input-attributes"
+          indent-result="yes"
+>
+  <html>
+    <head><title>SimpleTaglib Input Attributes Demonstration</title></head>
+    <body>
+      <h1>SimpleTaglib Input Attributes Demonstration</h1>
+
+      <h2>attrib</h2>
+      <ol>
+        <li><demo:attrib/></li>
+        <li><demo:attrib parameter="value"/></li>
+      </ol>
+
+      <h2>child</h2>
+      <ol>
+        <li><demo:child/></li>
+        <li>
+          <demo:child>
+            <demo:parameter>value</demo:parameter>
+          </demo:child>
+        </li>
+      </ol>
+
+      <h2>attribOrChild</h2>
+      <ol>
+        <li><demo:attribOrChild/></li>
+        <li><demo:attribOrChild parameter="value"/></li>
+        <li>
+          <demo:attribOrChild>
+            <demo:parameter>value</demo:parameter>
+          </demo:attribOrChild>
+        </li>
+        <li>
+          <demo:attribOrChild parameter="value1">
+            <demo:parameter>value2</demo:parameter>
+          </demo:attribOrChild>
+        </li>
+      </ol>
+
+      <h2>childStruct</h2>
+      <ol>
+        <li><demo:childStruct/></li>
+        <li>
+          <demo:childStruct>
+            <demo:parameter>value</demo:parameter>
+          </demo:childStruct>
+        </li>
+        <li>
+          <demo:childStruct>
+            <demo:parameter>value1</demo:parameter>
+            <demo:parameter>value2</demo:parameter>
+          </demo:childStruct>
+        </li>
+      </ol>
+
+      <h2>attrib-or-childStruct</h2>
+      <ol>
+        <li><demo:attrib-or-childStruct/></li>
+        <li><demo:attrib-or-childStruct parameter="value"/></li>
+        <li>
+          <demo:attrib-or-childStruct>
+            <demo:parameter>value</demo:parameter>
+          </demo:attrib-or-childStruct>
+        </li>
+        <li>
+          <demo:attrib-or-childStruct parameter="value1">
+            <demo:parameter>value2</demo:parameter>
+          </demo:attrib-or-childStruct>
+        </li>
+        <li>
+          <demo:attrib-or-childStruct>
+            <demo:parameter>value1</demo:parameter>
+            <demo:parameter>value2</demo:parameter>
+          </demo:attrib-or-childStruct>
+        </li>
+      </ol>
+
+      <h2>captureContent</h2>
+      <ol>
+        <li><demo:captureContent/></li>
+        <li><demo:captureContent>text content</demo:captureContent></li>
+        <li>
+          <demo:captureContent>
+            text content
+          </demo:captureContent>
+        </li>
+      </ol>
+
+      <h2>captureContent-and-keepWhitespace</h2>
+      <ol>
+        <li><demo:captureContent-and-keepWhitespace/></li>
+        <li><demo:captureContent-and-keepWhitespace>text content</demo:captureContent-and-keepWhitespace></li>
+        <li>
+          <demo:captureContent-and-keepWhitespace>
+            text content
+          </demo:captureContent-and-keepWhitespace>
+        </li>
+      </ol>
+
+      <h2>complex-childStruct</h2>
+      <pre>
+        <complex-childStruct
+          xmlns="http://www.nsds.com/NS/xsp/demo/simple-input-attributes">
+            <add>
+                <permission type="user">
+                    foo
+                </permission>
+                <permission>
+                    <type>group</type>
+                    bar
+                </permission>
+                <target>/test.html</target>
+                <comment lang="en" day="Sun">Test entry</comment>
+                <comment lang="en" day="Wed">Test entry 2</comment>
+                <comment lang="de">Testeintrag</comment>
+            </add>
+            <remove target="/test2.html">
+                <permission type="user">
+                    baz
+                </permission>
+            </remove>
+        </complex-childStruct>
+      </pre>
+    </body>
+  </html>
+</xsp:page>

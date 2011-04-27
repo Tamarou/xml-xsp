@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="NULL" type="application/x-xsp"?>
+<xsp:page
+    language="Perl"
+    xmlns:xsp="http://apache.org/xsp/core/v1"
+    xmlns:object="http://www.creITve.de/2002/XSP/Demo/Object"
+>
+<html>
+<head>
+<title>SimpleTaglib OO Demo</title>
+</head>
+<body>
+<h1>SimpleTaglib OO Demo</h1>
+<h2>One object</h2>
+<object:new>
+    <ul>
+        <li>day: <object:day/></li>
+        <li>month: <object:month/></li>
+        <li>year: <object:year/></li>
+    </ul>
+</object:new>
+<h2>Several nested objects</h2>
+<object:new>
+    <object:new name="epoch" timestamp="0">
+        <object:new name="Birthday of 2 AxKit-Developers" timestamp="227228400">
+            <ul>
+                <li>days: <object:day/> - <object:day name="epoch"/> - <object:day name="Birthday of 2 AxKit-Developers"/></li>
+                <li>months: <object:month/> - <object:month name="epoch"/> - <object:month name="Birthday of 2 AxKit-Developers"/></li>
+                <li>years: <object:year/> - <object:year name="epoch"/> - <object:year name="Birthday of 2 AxKit-Developers"/></li>
+            </ul>
+        </object:new>
+    </object:new>
+</object:new>
+</body>
+</html>
+</xsp:page>

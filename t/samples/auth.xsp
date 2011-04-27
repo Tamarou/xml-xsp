@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="NULL" type="application/x-xsp"?>
+<xsp:page language="Perl"
+	xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+	xmlns:session="http://www.apache.org/1999/XSP/Session"
+	xmlns:auth="http://www.creITve.de/2002/XSP/Auth"
+ 	xmlns="http://www.w3.org/1999/xhtml">
+<html>
+    <head>
+        <title>Auth Taglib demo</title>
+        <link rel="stylesheet" url="/axkit/stylesheets/style.css"/>
+    </head>
+    <body>
+        <h1>Auth Taglib demo</h1>
+
+        <auth:add-access><auth:access type="group">blas</auth:access></auth:add-access>
+        <auth:set-access><auth:access type="user">fubar</auth:access></auth:set-access>
+        <auth:add-access><auth:access type="group">foos</auth:access></auth:add-access>
+        <auth:add-access><auth:access type="group">bars</auth:access></auth:add-access>
+        <auth:rem-access><auth:access type="group">bars</auth:access></auth:rem-access>
+
+        <dl>
+            <dt><b>Access:</b></dt>
+            <dd><auth:get-access/></dd>
+
+            <dt><b>Permissions of this page:</b></dt>
+            <dd><auth:get-permission target=""/></dd>
+
+            <dt><b>Permissions of subresource 'view':</b></dt>
+            <dd><auth:get-permission target="view"/></dd>
+
+            <dt><b>Encrypt password:</b></dt>
+            <dd><auth:encrypt-password>ficken</auth:encrypt-password></dd>
+
+            <dt><b>Password matches?</b></dt>
+            <dd><auth:password-matches encrypted="$1$jsdxRBEt$IzCeNthea4KqzkzNB7sT4/" clear="ficken"/></dd>
+        </dl>
+    
+        <p><a href="showsource.xsp?auth.xsp">View Source</a></p>
+    </body>
+</html>
+</xsp:page>

@@ -1,0 +1,12 @@
+<xsp:page xmlns:xsp="http://apache.org/xsp/core/v1"
+    xmlns:datetime="http://axkit.org/xsp/demo/datetime"
+>
+  <xsp:structure>
+    <xsp:import>Time::Piece</xsp:import>
+  </xsp:structure>
+  <page>
+    <title>My First XSP Page</title>
+    The time is now: <datetime:now/>
+  </page>
+</xsp:page>
+                                        

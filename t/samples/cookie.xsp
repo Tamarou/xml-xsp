@@ -1,0 +1,33 @@
+<xsp:page
+  xmlns:xsp="http://apache.org/xsp/core/v1"
+  xmlns:cookie="http://axkit.org/NS/xsp/cookie/v1"
+  xmlns:param="http://axkit.org/NS/xsp/param/v1"
+>
+<html>
+  <head>
+    <title>Cookie Taglib Example</title>
+  </head>
+  <body>
+    <div>
+      <form method="POST">
+        Cookie value:
+        <input type="text" name="myparam">
+          <xsp:attribute name="value"><xsp:expr><param:myparam/> || <cookie:fetch name="textCookie"/></xsp:expr></xsp:attribute>
+        </input>
+        <input type="submit" value="Submit"/>
+      </form>
+    </div>
+    
+    <xsp:logic>
+      if (<param:myparam/>) {
+        <xsp:content>
+          Created cookie
+          <cookie:create name="textCookie">
+            <cookie:value><param:myparam/></cookie:value>
+          </cookie:create>
+        </xsp:content>
+      }
+    </xsp:logic>
+  </body>
+</html>
+</xsp:page>

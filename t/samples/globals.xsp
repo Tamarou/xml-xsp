@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<xsp:page language="Perl"
+	xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+	xmlns:session="http://www.apache.org/1999/XSP/Session"
+	xmlns:global="http://www.creITve.de/2002/XSP/Global"
+ 	xmlns="http://www.w3.org/1999/xhtml">
+<html>
+    <head>
+        <title>Globals Taglib demo</title>
+        <link rel="stylesheet" url="/axkit/stylesheets/style.css"/>
+    </head>
+    <body>
+        <h1>Globals Taglib demo</h1>
+        <global:set-attribute>
+            <global:name>Accesses</global:name>
+            <xsp:expr><global:get-attribute name="Accesses"/>+1</xsp:expr>
+        </global:set-attribute>
+        <dl>
+            <dt><b>Names:</b></dt>
+            <dd>
+                <xsp:expr>join(",",<global:get-attribute-names/>)</xsp:expr><br/>
+                <global:get-attribute-names as="node"/>
+            </dd>
+
+            <dt><b>Values:</b></dt>
+            <dd>
+                <ul><xsp:logic>
+                    foreach my $name (<global:get-attribute-names/>) {
+                        <li>
+                            <b><em><xsp:expr>$name</xsp:expr></em></b>:
+                            <tt><global:get-attribute as="node">
+                                <global:name><xsp:expr>$name</xsp:expr></global:name>
+                            </global:get-attribute></tt>
+                        </li>
+                    }
+                </xsp:logic></ul>
+            </dd>
+
+            <dt><b>Creation Time:</b></dt>
+            <dd><global:get-creation-time as="string"/></dd>
+        </dl>
+
+        <p><a href="showsource.xsp?globals.xsp">View Source</a></p>
+    </body>
+</html>
+</xsp:page>

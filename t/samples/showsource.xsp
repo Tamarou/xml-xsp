@@ -1,0 +1,34 @@
+<xsp:page xmlns:xsp="http://www.apache.org/1999/XSP/Core">
+
+<xsp:import>Apache::File</xsp:import>
+
+<html>
+    <xsp:logic>
+      if ($r->args !~ /^\w+\.?\w+$/) {
+        die "Invalid argument: ".$r->args;
+      }
+    </xsp:logic>
+    <head>
+        <title>Source for <xsp:expr>$r->args</xsp:expr></title>
+        <link rel="stylesheet" url="/axkit/stylesheets/style.css"/>
+    </head>
+    
+    <body>
+    <h1>Source for <xsp:expr>$r->args</xsp:expr></h1>
+    <xsp:logic>
+    # this oculd leak information. should check for 'demo files only'
+    my $filename = $r->lookup_uri($r->args)->filename;
+    my $file = Apache::File->new($filename);
+    <pre>
+    <xsp:expr><![CDATA[
+        join('', <$file>);
+    ]]></xsp:expr>
+    </pre>
+    </xsp:logic>
+    <p>
+    <a href="showsource.xsp?showsource.xsp">View Source</a>
+    </p>
+    </body>
+</html>
+
+</xsp:page>

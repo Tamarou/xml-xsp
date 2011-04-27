@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="NULL" type="application/x-xsp"?>
+<xsp:page
+    language="Perl"
+    xmlns:xsp="http://apache.org/xsp/core/v1"
+    xmlns:demo="http://www.creITve.de/2002/XSP/Demo/Simple"
+>
+<html>
+<head>
+<title>Simple SimpleTaglib Demo</title>
+</head>
+<body>
+<h1>Simple SimpleTaglib Demo</h1>
+<h2>Output modes</h2>
+<ul>
+<li>expr in xml context: <demo:calculate-something/></li>
+<li>expr in perl context: <xsp:expr>'perl '.<demo:calculate-something/></xsp:expr></li>
+<li>exprOrNode in xml context: <demo:first-time/></li>
+<li>exprOrNode in xml context as node: <demo:first-time as="node"/></li>
+<li>exprOrNode in perl context as string: <xsp:expr>'time: '.<demo:first-time as="string"/></xsp:expr></li>
+<li>node list in xml context: <demo:times/></li>
+<li>node list in perl array context: <xsp:expr>join(", ",<demo:times/>)</xsp:expr></li>
+<li>node list in perl scalar context: <xsp:expr>scalar(<demo:times/>)</xsp:expr></li>
+</ul>
+<h2>Input modes</h2>
+<ul>
+<li>last access time of this page in this process: <demo:last-time as="string"/></li>
+<li>no input, no output: <demo:set-time/></li>
+<li>last access time of this page in this process: <demo:last-time as="string"/></li>
+<li>input as attribute, no output: <demo:set-custom-time time="1234567890"/></li>
+<li>last access time of this page in this process: <demo:last-time as="string"/></li>
+<li>input as child element, no output: <demo:set-custom-time><demo:time>1000000000</demo:time></demo:set-custom-time></li>
+<li>last access time of this page in this process: <demo:last-time as="string"/></li>
+<li>input as content: <demo:set-custom-time-content>9876543210</demo:set-custom-time-content></li>
+<li>last access time of this page in this process: <demo:last-time as="string"/></li>
+</ul>
+</body>
+</html>
+</xsp:page>

@@ -1,0 +1,175 @@
+<xsp:page
+    xmlns:xsp="http://apache.org/xsp/core/v1"
+    xmlns:esql="http://apache.org/xsp/SQL/v2"
+>
+
+<xsp:import>File::Spec</xsp:import>
+
+<xsp:logic>my $dbname = File::Spec->catdir(File::Spec->tmpdir, "esqldemo.db");</xsp:logic>
+
+<html>
+    <head>
+        <title>ESQL Example</title>
+        <link rel="stylesheet" url="/axkit/stylesheets/style.css"/>
+    </head>
+
+    <body>
+    <h1>ESQL Example (<xsp:expr>$dbname</xsp:expr>)</h1>
+
+    <!-- remove/recreate the db on every hit -->
+    <xsp:logic>
+      <esql:connection>
+        <esql:driver transactions="yes">SQLite</esql:driver>
+        <esql:dburl>dbname=<xsp:expr>$dbname</xsp:expr></esql:dburl>
+
+        <xsp:logic>
+
+        if ($cgi->param('reset')) {
+          eval {
+            <esql:execute-query>
+                <esql:query>drop table example</esql:query>
+                <esql:update-results/>
+            </esql:execute-query>
+          };
+        }
+
+        <!-- Create Tables -->
+        eval {
+            <esql:execute-query>
+                <esql:query>create table example ( id integer primary key, firstname, lastname, email )</esql:query>
+                <esql:update-results>
+                    <p>Table (re)created successfully.</p>
+                </esql:update-results>
+            </esql:execute-query>
+        };
+
+        if ($cgi->param('type') eq 'insert') {
+            AxKit::Debug(1, "**** Inserting *****");
+            <!-- Insert new row -->
+            <esql:execute-query>
+                <esql:query>
+                    insert into example (firstname, lastname, email) values (
+                        <esql:parameter><xsp:expr>$cgi->param('firstname')</xsp:expr></esql:parameter>,
+                        <esql:parameter><xsp:expr>$cgi->param('lastname')</xsp:expr></esql:parameter>,
+                        <esql:parameter><xsp:expr>$cgi->param('email')</xsp:expr></esql:parameter>
+                        )
+                </esql:query>
+                <esql:update-results>
+                    <p>Row inserted successfully.</p>
+                </esql:update-results>
+            </esql:execute-query>
+        }
+        elsif ($cgi->param('type') eq 'query') {
+            <!-- Query Database -->
+            <esql:execute-query>
+                <esql:query>
+                    select * from example
+                    where firstname = <esql:parameter><xsp:expr>$cgi->param('firstname')</xsp:expr></esql:parameter>
+                    and lastname = <esql:parameter><xsp:expr>$cgi->param('lastname')</xsp:expr></esql:parameter>
+                    and email = <esql:parameter><xsp:expr>$cgi->param('email')</xsp:expr></esql:parameter>
+                </esql:query>
+                <esql:results>
+                    <p>Results:
+                    <table border="1">
+                        <tr>
+                            <th>First Name</th><th>Last Name</th><th>Email</th>
+                        </tr>
+                        <esql:row-results>
+                        <tr>
+                            <td><esql:get-column column="firstname"/></td>
+                            <td><esql:get-column column="lastname"/></td>
+                            <td><esql:get-column column="email"/></td>
+                        </tr>
+                        </esql:row-results>
+                    </table>
+                    </p>
+                </esql:results>
+                <esql:no-results>
+                    <p>No results found for your query.</p>
+                </esql:no-results>
+            </esql:execute-query>
+        }
+        elsif ($cgi->param('type') eq 'show all') {
+            <esql:execute-query>
+                <esql:query>
+                    select * from example
+                </esql:query>
+                <esql:results>
+                    <p>Results:
+                    <table border="1">
+                        <tr>
+                            <th>id</th><th>First Name</th><th>Last Name</th><th>Email</th>
+                        </tr>
+                        <esql:row-results>
+                        <tr>
+                            <td><esql:get-column column="id"/></td>
+                            <td><esql:get-column column="firstname"/></td>
+                            <td><esql:get-column column="lastname"/></td>
+                            <td><esql:get-column column="email"/></td>
+                        </tr>
+                        </esql:row-results>
+                    </table>
+                    </p>
+                </esql:results>
+                <esql:no-results>
+                    <p>No results found for your query.</p>
+                </esql:no-results>
+            </esql:execute-query>
+        }
+
+        <p>
+        <!-- Show Form -->
+        <form method="GET">
+            <table>
+            <tr>
+                <td>First name:</td>
+                <td><input type="text" name="firstname">
+                    <xsp:attribute name="VALUE">
+                        <xsp:expr>$cgi->param('firstname')</xsp:expr>
+                    </xsp:attribute>
+                    </input>
+                </td>
+            </tr>
+            <tr>
+                <td>Last name:</td>
+                <td><input type="text" name="lastname">
+                    <xsp:attribute name="value">
+                        <xsp:expr>$cgi->param('lastname')</xsp:expr>
+                    </xsp:attribute>
+                    </input>
+                </td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td><input type="text" name="email">
+                    <xsp:attribute name="value">
+                        <xsp:expr>$cgi->param('email')</xsp:expr>
+                    </xsp:attribute>
+                    </input>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" name="type" value="query"/>
+                    <input type="submit" name="type" value="insert"/>
+                    <input type="submit" name="type" value="show all"/>
+                </td>
+            </tr>
+        </table>
+        </form>
+        </p>
+
+        </xsp:logic>
+
+      </esql:connection>
+    </xsp:logic>
+
+    <p><a href="esql.xsp?reset=1">Reset Database</a></p>
+
+    <p><a href="showsource.xsp?esql.xsp">View Source</a></p>
+
+    </body>
+</html>
+
+</xsp:page>
