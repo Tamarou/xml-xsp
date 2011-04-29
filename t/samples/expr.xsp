@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<xsp:page xmlns:xsp="http://www.apache.org/1999/XSP/Core">
+  <page title="Testing the expr tag">
+    <xsp:logic>
+        my @beans = ('some', 'some');
+        my $moar = 'some';
+    </xsp:logic>
+    <baldrick>Um, <xsp:expr>$beans[0]</xsp:expr> beans and <xsp:expr>$beans[1]</xsp:expr> beans is <xsp:expr>$moar</xsp:expr> beans.</baldrick>
+  </page>
+</xsp:page>
