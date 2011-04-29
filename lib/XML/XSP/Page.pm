@@ -9,6 +9,25 @@ has xml_document => (
     default     => sub { XML::LibXML::Document->new },
 );
 
+#XXX formalize the object types for request, context response.
+has request => (
+    is          => 'ro',
+    isa         => 'Object',
+    #required    => 1,
+);
+
+has response => (
+    is          => 'ro',
+    isa         => 'Object',
+    #required    => 1,
+);
+
+has context => (
+    is          => 'ro',
+    isa         => 'Object',
+    #required    => 1,
+);
+
 sub add_element_node {
     my $self = shift;
     my ( $document, $parent_node, $tag_name, $ns_uri ) = @_;
