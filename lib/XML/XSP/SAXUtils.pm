@@ -26,6 +26,19 @@ has xsp_manage_text => (
     },
 );
 
+has xsp_avt_interpolate => (
+    traits      => ['Bool'],
+    is          => 'rw',
+    isa         => 'Bool',
+    default     => sub { 1 },
+    required    => 1,
+    handles     => {
+        avt_interpolate        => 'set',
+        avt_uninterpolate      => 'unset',
+        skip_avt_interpolation => 'not',
+    },
+);
+
 has character_buffer => (
     traits      => ['String'],
     is          => 'rw',

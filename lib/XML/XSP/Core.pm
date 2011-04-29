@@ -23,9 +23,12 @@ sub start_element {
     given ( $e->{LocalName} ) {
         when ( 'page' ) {
             if ($attrs{language} && lc($attrs{language}) ne 'perl') {
-                die "Only Perl XSP pages supported at this time!";
+                die "Only Perl XSP pages are supported by this processor!";
             }
-            #XXX look into attribute interpolation and user-defined base class here
+            if (my $interp = $attrs{'attribute-value-interpolate'} ) {
+                # default is to interpolate
+                $self->avt_uninterpolate if $interp eq 'no';
+            }
         }
         when ( 'import' ) {
             return 'use ';

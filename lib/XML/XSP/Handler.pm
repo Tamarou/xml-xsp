@@ -70,7 +70,10 @@ sub register_taglib {
     my ($xmlns, $package_name) = @_;
     Class::MOP::load_class( $package_name );
     $self->add_taglib(
-        $xmlns => $package_name->new(xsp_manage_text => $self->xsp_manage_text)
+        $xmlns => $package_name->new(
+            xsp_manage_text     => $self->xsp_manage_text,
+            xsp_avt_interpolate => $self->xsp_avt_interpolate,
+        )
     );
 }
 

@@ -1,6 +1,7 @@
 package XML::XSP::TestTemplate;
 use Moose;
 use XML::XSP;
+use Test::XPath;
 
 has new_xsp => (
     is          => 'ro',
@@ -10,6 +11,11 @@ has new_xsp => (
 
 sub _build_new_xsp {
     return XML::XSP->new();
+}
+
+sub xml_tester {
+    my $self = shift;
+    return Test::XPath->new( @_ );
 }
 
 1;

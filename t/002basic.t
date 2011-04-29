@@ -8,7 +8,7 @@ use Data::Dumper::Concise;
 use_ok('XML::XSP::TestTemplate');
 
 my $template = XML::XSP::TestTemplate->new;
-my $xml_file = 't/samples/logic.xsp';
+my $xml_file = 't/samples/basic.xsp';
 
 my $doc = XML::LibXML->new->parse_file( $xml_file );
 
@@ -42,6 +42,16 @@ my $dom = $instance->xml_generator(undef, XML::LibXML::Document->new, undef);
 ok( $dom, 'Doc returned from generated code' );
 
 isa_ok( $dom, 'XML::LibXML::Document', 'Returned doc is a proper DOM tree');
+
+my $xt = $template->xml_tester( xml => $dom->toString );
+
+ok( $xt );
+
+$xt->ok( '/page', 'Root element is "page"' );
+
+$xt->ok( '/page[@title]', 'Root element has a "title" attribute' );
+
+$xt->is( 'count(/page/p)', 1, '"page" element has on "p" child' );
 
 warn $dom->toString(1);
 
