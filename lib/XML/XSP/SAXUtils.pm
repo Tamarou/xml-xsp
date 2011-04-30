@@ -26,6 +26,19 @@ has xsp_manage_text => (
     },
 );
 
+has xsp_indent => (
+    traits      => ['Bool'],
+    is          => 'rw',
+    isa         => 'Bool',
+    default     => sub { 0 },
+    required    => 1,
+    handles     => {
+        indent_result   => 'set',
+        unindent_result => 'unset',
+        not_indented    => 'not',
+    },
+);
+
 has xsp_avt_interpolate => (
     traits      => ['Bool'],
     is          => 'rw',

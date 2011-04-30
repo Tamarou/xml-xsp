@@ -73,6 +73,7 @@ sub register_taglib {
         $xmlns => $package_name->new(
             xsp_manage_text     => $self->xsp_manage_text,
             xsp_avt_interpolate => $self->xsp_avt_interpolate,
+            xsp_indent          => $self->xsp_indent,
         )
     );
 }

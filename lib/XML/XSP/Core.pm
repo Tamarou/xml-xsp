@@ -34,7 +34,12 @@ sub start_element {
             return 'use ';
         }
         when ( 'element' ) {
-            # XXX
+            # XXX could do some error trapping here to (for example)
+            # make sure this element isn't a child of <xsp:attribute>
+            if (my $name = $attrs{'name'} ) {
+                $self->unmanage_text;
+                return '$parent = $self->add_element_node($document, $parent, ' . $self->quote_args($name) . ');';
+            }
         }
         when ( 'logic' ) {
             # XXX
@@ -79,7 +84,11 @@ sub characters {
 
     given ( $self->current_tag ) {
         when ( /^(content|element)$/ ) {
-            return '$self->add_text_node($document, $parent, ' . $self->quote_args( $text) . ');';
+            warn "CONTENT TAG\n";
+            if ( $text =~ /\S/ || $self->xsp_indent ) {
+                warn "INDENTY\n";
+                return '$self->add_text_node($document, $parent, ' . $self->quote_args( $text) . ');';
+            }
         }
         when ( /^(attribute|comment|name)$/ ) {
             $text =~ s/^\s*//; $text =~ s/\s*$//;
@@ -121,6 +130,9 @@ sub end_element {
             # XXX
         }
         when ( 'text' ) {
+            # XXX
+        }
+        when ( 'logic' ) {
             # XXX
         }
         when ( 'expr' ) {

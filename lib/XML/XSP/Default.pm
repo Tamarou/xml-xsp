@@ -7,7 +7,7 @@ sub attribute_value_template {
     my $self = shift;
     my $input = shift;
 
-    warn "AVT INPUT: $input \n";
+    warn "AVT INPUT $input \n";
     # if the user turned off AVT interpolation or there are no
     # curlies in the value, just quote the input and return it.
     if ( $self->skip_avt_interpolation || $input !~ /{/ ) {
@@ -39,7 +39,6 @@ sub attribute_value_template {
         }
     }
     $input =~ /\G(.*)$/gc and $output .= "." . $self->quote_args( undouble_curlies($1) );
-    warn "AVT RETURNING $output \n";
     return $output;
 }
 
@@ -75,6 +74,11 @@ sub start_element {
 sub characters {
     my $self = shift;
     my $text = shift;
+
+    if ( $self->not_indented && $text->{Data} !~ /\S/ ) {
+        return '';
+    }
+
     return '$self->add_text_node($document, $parent, ' . $self->quote_args( $text->{Data}) . ');';
 }
 

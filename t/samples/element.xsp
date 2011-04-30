@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<xsp:page xmlns:xsp="http://www.apache.org/1999/XSP/Core">
+  <page title="xsp:element Tests">
+    <xsp:logic>
+      my $number = 655321;
+    </xsp:logic>
+    <xsp:element name="one"/>
+  </page>
+</xsp:page>
