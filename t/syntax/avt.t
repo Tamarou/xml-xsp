@@ -8,7 +8,7 @@ use Data::Dumper::Concise;
 use_ok('XML::XSP::TestTemplate');
 
 my $template = XML::XSP::TestTemplate->new;
-my $xml_file = 't/samples/expr.xsp';
+my $xml_file = 't/samples/avt.xsp';
 
 my $doc = XML::LibXML->new->parse_file( $xml_file );
 
@@ -49,13 +49,25 @@ ok( $xt );
 
 $xt->ok( '/page', 'Root element is "page"' );
 
-$xt->ok( '/page/baldrick', 'Baldrick element created.' );
+$xt->ok( '/page/p[@id = 1]', 'First test element found' );
 
-$xt->is( '/page/baldrick', 'Um, some beans and some beans is some beans.', 'Interpolation worked.' );
+$xt->is( '/page/p[@id = 1]/@test', '655321', 'Simple interpolation' );
 
-$xt->ok( '/page/join', 'Join element created.' );
+$xt->ok( '/page/p[@id = 2]', 'Second test element found' );
 
-$xt->is( '/page/join', 'some::some::some', 'Inlined function works' );
+$xt->is( '/page/p[@id = 2]/@test', 'droogie_655321', 'Mixed interpolation, append' );
+
+$xt->ok( '/page/p[@id = 3]', 'Third test element found' );
+
+$xt->is( '/page/p[@id = 3]/@test', '6553210', 'Mixed interpolation, prepend' );
+
+$xt->ok( '/page/p[@id = 4]', 'Fourth test element found' );
+
+$xt->is( '/page/p[@id = 4]/@test', '123556-655321', 'Mixed interpolation, prepend' );
+
+$xt->ok( '/page/p[@id = 5]', 'Fifth test element found' );
+
+$xt->is( '/page/p[@id = 5]/@test', 'bar', 'Syntax collision.' );
 
 warn $dom->toString(1);
 
