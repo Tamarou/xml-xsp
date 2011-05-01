@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<xsp:page xmlns:xsp="http://www.apache.org/1999/XSP/Core">
+  <page title="xsp:element Tests">
+    <p>
+        <xsp:attribute name="class">some value</xsp:attribute>
+        <xsp:attribute>
+            <xsp:name>second_class</xsp:name>
+            some other value
+        </xsp:attribute>
+    </p>
+  </page>
+</xsp:page>

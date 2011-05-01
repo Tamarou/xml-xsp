@@ -8,7 +8,7 @@ use Data::Dumper::Concise;
 use_ok('XML::XSP::TestTemplate');
 
 my $template = XML::XSP::TestTemplate->new;
-my $xml_file = 't/samples/name.xsp';
+my $xml_file = 't/samples/attribute.xsp';
 
 my $doc = XML::LibXML->new->parse_file( $xml_file );
 
@@ -49,8 +49,13 @@ ok( $xt );
 
 $xt->ok( '/page', 'Root element is "page"' );
 
-$xt->ok( '/page/unobtainium', 'Dynamically-named element "unobtainium" created.' );
+$xt->ok( '/page/p/@class', '"p" element has a "class" attribute"' );
 
+$xt->is( '/page/p/@class', 'some value', '"class" attribute value set.' );
+
+$xt->ok( '/page/p/@second_class', '"p" element has a "second_class" attribute. "name" child element works"' );
+
+$xt->is( '/page/p/@second_class', 'some other value', '"second_class" attribute value set.' );
 
 warn $dom->toString(1);
 
