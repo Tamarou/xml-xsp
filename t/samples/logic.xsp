@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<xsp:page xmlns:xsp="http://www.apache.org/1999/XSP/Core">
+<xsp:logic>
+my $outside_user_root = 'yep';
+our $count = 0;
+
+sub increment {
+    $count++;
+}
+</xsp:logic>
+
+  <page title="Testing the logic tag">
+    <xsp:logic>
+        if ( $count == 0 ) {
+            <p>Count should begin at zero and I got '<xsp:expr>$count</xsp:expr>'</p>
+            increment();
+        }
+        else {
+            <p class="error">Whoops, count is not zero. got '<xsp:expr>$count</xsp:expr>' instead.</p>
+        }
+    </xsp:logic>
+    <hr/>
+    <xsp:logic>
+        if ( $count == 1 ) {
+            <p>Count incremented, got '<xsp:expr>$count</xsp:expr>'</p>
+            increment();
+        }
+        else {
+            <p class="error">Whoops, count is not zero.</p>
+        }
+    </xsp:logic>
+  </page>
+</xsp:page>
