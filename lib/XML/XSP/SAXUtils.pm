@@ -39,6 +39,19 @@ has xsp_indent => (
     },
 );
 
+has xsp_user_root => (
+    traits      => ['Bool'],
+    is          => 'rw',
+    isa         => 'Bool',
+    default     => sub { 0 },
+    required    => 1,
+    handles     => {
+        set_user_root   => 'set',
+        unset_user_root => 'unset',
+        not_user_root    => 'not',
+    },
+);
+
 has xsp_attribute_name_context => (
     traits      => ['Bool'],
     is          => 'rw',

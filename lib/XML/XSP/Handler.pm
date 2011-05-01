@@ -74,6 +74,7 @@ sub register_taglib {
             xsp_manage_text            => $self->xsp_manage_text,
             xsp_avt_interpolate        => $self->xsp_avt_interpolate,
             xsp_indent                 => $self->xsp_indent,
+            xsp_user_root              => $self->xsp_user_root,
             xsp_attribute_name_context => $self->xsp_attribute_name_context,
         )
     );
@@ -106,19 +107,19 @@ sub start_element {
 
     #warn "Start DEPTH " . $self->context_depth . " " . Dumper( $self->context_stack ) . "\n";
 
-    if ( $self->context_depth == 1 ) {
-        my $code = join "\n",
-            "\n",
-            'sub xml_generator {',
-            'my $self = shift;',
-            'my ($r, $document, $parent) = @_;'
-        ;
-        $self->add_to_package( $code );
-    }
 
     # hand off to to the taglib if one is registered
     if ( length $e->{NamespaceURI} && $self->has_taglib($e->{NamespaceURI}) ) {
         $self->manage_text;
+###
+        # this permits class-level subs, attributes, etc by waiting until
+        # the first non-XSP start element event to emit the main wrapper sub
+
+        warn sprintf "WTF??? '%s' '%s' \n", $self->not_user_root, $e->{NamespaceURI};
+
+
+###
+        # continue with the start_element processing
         my $taglib_package = $self->get_taglib( $e->{NamespaceURI} );
         if ( $taglib_package->can('start_element') ) {
             $self->add_to_package( $taglib_package->start_element( $e ) );
@@ -128,6 +129,17 @@ sub start_element {
         }
     }
     else {
+        if ( $self->not_user_root ) {
+            my $code = join "\n",
+                "\n",
+                'sub xml_generator {',
+                'my $self = shift;',
+                'my ($r, $document, $parent) = @_;'
+            ;
+            $self->add_to_package( $code );
+            $self->set_user_root;
+        }
+
         $self->unmanage_text;
         $self->add_to_package( $self->passthrough_handler->start_element( $e ) );
     }
