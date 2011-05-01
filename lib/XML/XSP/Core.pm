@@ -149,13 +149,16 @@ sub characters {
             return '';
         }
         when ( 'attribute' ) {
-            warn "ATTR!!!! " . $self->attribute_name_unknown . "\n";
             return '' if $self->attribute_name_unknown;
             $text =~ s/^\s*//; $text =~ s/\s*$//;
             $text = $self->quote_args( $text );
             return ". $text ";
         }
-        when ( /^(comment|name)$/ ) {
+        when ( 'comment' ) {
+            $text =~ s/^\s*//; $text =~ s/\s*$//;
+            return '$self->add_comment_node($document, $parent, ' . $self->quote_args( $text ) . ');';
+        }
+        when ( 'name' ) {
             $text =~ s/^\s*//; $text =~ s/\s*$//;
             $text = $self->quote_args( $text );
             return ". $text ";

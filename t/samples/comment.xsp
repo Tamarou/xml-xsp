@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<xsp:page xmlns:xsp="http://www.apache.org/1999/XSP/Core">
+  <page title="Time of Day">
+    <xsp:logic>
+      my $now = localtime(time);
+      <xsp:comment>before</xsp:comment>
+    </xsp:logic>
+    <p>
+      At the tone the time will be <xsp:expr>$now</xsp:expr>. Please make a note of it.
+    </p>
+  </page>
+</xsp:page>

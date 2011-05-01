@@ -58,6 +58,12 @@ sub add_text_node {
     $parent_node->appendChild($node);
 };
 
+sub add_comment_node {
+    my $self = shift;
+    my ($document, $parent, $text) = @_;
+    my $node = $document->createComment($text);
+    $parent->appendChild($node);
+}
 
 __PACKAGE__->meta->make_immutable;
 
