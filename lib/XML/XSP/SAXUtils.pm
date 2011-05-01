@@ -30,12 +30,25 @@ has xsp_indent => (
     traits      => ['Bool'],
     is          => 'rw',
     isa         => 'Bool',
-    default     => sub { 0 },
+    default     => sub { 1 },
     required    => 1,
     handles     => {
         indent_result   => 'set',
         unindent_result => 'unset',
         not_indented    => 'not',
+    },
+);
+
+has xsp_attribute_name_context => (
+    traits      => ['Bool'],
+    is          => 'rw',
+    isa         => 'Bool',
+    default     => sub { 0 },
+    required    => 1,
+    handles     => {
+        attribute_name_seen    => 'set',
+        attribute_name_unset   => 'unset',
+        attribute_name_unknown => 'not',
     },
 );
 

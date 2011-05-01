@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<xsp:page xmlns:xsp="http://www.apache.org/1999/XSP/Core">
+  <page title="xsp:element Tests">
+    <xsp:logic>
+      my $element_name = 'unobtainium';
+      my $attribute_name = 'personal';
+      <!-- revisit to make xsp:exper work for dynamic names -->
+    </xsp:logic>
+    <xsp:element>
+        <xsp:name>unobtainium</xsp:name>
+        <xsp:attribute>
+            <xsp:name>personal</xsp:name>
+            some value
+        </xsp:attribute>
+    </xsp:element>
+
+  </page>
+</xsp:page>

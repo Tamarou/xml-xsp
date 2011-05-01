@@ -71,9 +71,10 @@ sub register_taglib {
     Class::MOP::load_class( $package_name );
     $self->add_taglib(
         $xmlns => $package_name->new(
-            xsp_manage_text     => $self->xsp_manage_text,
-            xsp_avt_interpolate => $self->xsp_avt_interpolate,
-            xsp_indent          => $self->xsp_indent,
+            xsp_manage_text            => $self->xsp_manage_text,
+            xsp_avt_interpolate        => $self->xsp_avt_interpolate,
+            xsp_indent                 => $self->xsp_indent,
+            xsp_attribute_name_context => $self->xsp_attribute_name_context,
         )
     );
 }

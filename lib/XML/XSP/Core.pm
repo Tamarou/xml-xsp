@@ -45,10 +45,66 @@ sub start_element {
             # XXX
         }
         when ( 'attribute' ) {
-            # XXX
+            if (my $uri = $attrs{uri} ) {
+                my $prefix = $attrs{prefix};
+                my $local_name = $attrs{name};
+
+                $self->attribute_name_seen;
+
+                return '$parent->setNamespace(' .
+                        $self->quote_args($uri, $prefix) . ', 0);' .
+                        '$parent->setAttributeNS(' .
+                        $self->quote_args($uri, $local_name) . ', ""';
+            }
+
+            # only here if no NS URI was found
+
+            if ( my $name = $attrs{name} ) {
+                $self->attribute_name_seen;
+
+                # XXX prefix mapping?
+
+                 return '$parent->setAttribute(' . $self->quote_args( $name ) .', ""';
+
+            }
+
+            $self->attribute_name_unset;
+###
+#         if (my $uri = $attribs{uri}) {
+#             # handle NS attributes
+#             my $prefix = $attribs{prefix} || die "No prefix given";
+#             my $name = $attribs{name} || die "No name given";
+#             $e->{attrib_seen_name} = 1;
+#             return '$parent->setNamespace('.makeSingleQuoted($uri).', '.
+#                                             makeSingleQuoted($prefix).', 0);'.
+#                    '$parent->setAttributeNS('.makeSingleQuoted($uri).', '.
+#                                               makeSingleQuoted($name).', ""';
+#         }
+#         if (my $name = $attribs{name}) {
+#             $e->{attrib_seen_name} = 1;
+#             # handle prefixed names
+#             if ($name =~ s/^(.*?)://) {
+#                 my $prefix = $1;
+#                 return 'my $nsuri = $parent->lookupNamespaceURI(' . makeSingleQuoted($prefix) . ')'.
+#                         ' || die "No namespace found with given prefix";'."\n".
+#                         '$parent->setAttributeNS($nsuri,'.makeSingleQuoted($name).', ""';
+#             }
+#             return '$parent->setAttribute('.makeSingleQuoted($name).', ""';
+#         }
+#         $e->{attrib_seen_name} = 0;
+###
         }
         when ( 'name' ) {
-            # XXX
+            if ( $parent && $parent->{LocalName} eq 'element' ) {
+                return '$parent = $self->add_element_node($document, $parent, ""';
+            }
+            elsif ( $parent && $parent->{LocalName} eq 'attribute' ) {
+                $self->attribute_name_seen;
+                return '$parent->setAttribute(""';
+            }
+            else {
+                die "XSP 'name' element found in invalid context: '". $parent->{LocalName} . "'";
+            }
         }
         when ( 'pi' ) {
             # XXX ???
@@ -83,14 +139,23 @@ sub characters {
     my $text = $chars->{Data};
 
     given ( $self->current_tag ) {
+        warn "char current " . $self->current_tag . "\n";
         when ( /^(content|element)$/ ) {
             warn "CONTENT TAG\n";
             if ( $text =~ /\S/ || $self->xsp_indent ) {
                 warn "INDENTY\n";
                 return '$self->add_text_node($document, $parent, ' . $self->quote_args( $text) . ');';
             }
+            return '';
         }
-        when ( /^(attribute|comment|name)$/ ) {
+        when ( 'attribute' ) {
+            warn "ATTR!!!! " . $self->attribute_name_unknown . "\n";
+            return '' if $self->attribute_name_unknown;
+            $text =~ s/^\s*//; $text =~ s/\s*$//;
+            $text = $self->quote_args( $text );
+            return ". $text ";
+        }
+        when ( /^(comment|name)$/ ) {
             $text =~ s/^\s*//; $text =~ s/\s*$//;
             $text = $self->quote_args( $text );
             return ". $text ";
@@ -115,13 +180,18 @@ sub end_element {
             #XXX
         }
         when ( 'element' ) {
-            # XXX
+            return '$parent = $parent->getParentNode;' . "\n";
         }
         when ( 'attribute' ) {
-            # XXX
+            return ");\n";
         }
         when ( 'name' ) {
-            # XXX
+            if ( $parent && $parent->{LocalName} eq 'element' ) {
+                return ");\n";
+            }
+            elsif ( $parent && $parent->{LocalName} eq 'attribute' ) {
+                return ', ""';
+            }
         }
         when ( 'pi' ) {
             # XXX ???
