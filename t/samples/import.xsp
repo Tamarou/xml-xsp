@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<xsp:page xmlns:xsp="http://www.apache.org/1999/XSP/Core">
+<xsp:logic>
+<xsp:structure>
+    <xsp:import>XML::LibXML</xsp:import>
+    <xsp:import type="role">XML::XSP::TestTemplate::Howdy</xsp:import>
+</xsp:structure>
+
+</xsp:logic>
+  <page title="Testing import syntax">
+    <div id="test1">
+    <xsp:logic>
+        if ( $self->can('default_greeting') ) {
+            <p>Yep, included role attribute available</p>
+        }
+        else {
+            <p class="error">Whoops</p>
+        }
+    </xsp:logic>
+    </div>
+  </page>
+</xsp:page>

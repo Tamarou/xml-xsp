@@ -31,7 +31,7 @@ sub start_element {
             }
         }
         when ( 'import' ) {
-            return 'use ';
+            #XXX
         }
         when ( 'element' ) {
             # XXX could do some error trapping here to (for example)
@@ -69,30 +69,6 @@ sub start_element {
             }
 
             $self->attribute_name_unset;
-###
-#         if (my $uri = $attribs{uri}) {
-#             # handle NS attributes
-#             my $prefix = $attribs{prefix} || die "No prefix given";
-#             my $name = $attribs{name} || die "No name given";
-#             $e->{attrib_seen_name} = 1;
-#             return '$parent->setNamespace('.makeSingleQuoted($uri).', '.
-#                                             makeSingleQuoted($prefix).', 0);'.
-#                    '$parent->setAttributeNS('.makeSingleQuoted($uri).', '.
-#                                               makeSingleQuoted($name).', ""';
-#         }
-#         if (my $name = $attribs{name}) {
-#             $e->{attrib_seen_name} = 1;
-#             # handle prefixed names
-#             if ($name =~ s/^(.*?)://) {
-#                 my $prefix = $1;
-#                 return 'my $nsuri = $parent->lookupNamespaceURI(' . makeSingleQuoted($prefix) . ')'.
-#                         ' || die "No namespace found with given prefix";'."\n".
-#                         '$parent->setAttributeNS($nsuri,'.makeSingleQuoted($name).', ""';
-#             }
-#             return '$parent->setAttribute('.makeSingleQuoted($name).', ""';
-#         }
-#         $e->{attrib_seen_name} = 0;
-###
         }
         when ( 'name' ) {
             if ( $parent && $parent->{LocalName} eq 'element' ) {
@@ -138,12 +114,11 @@ sub characters {
     my $chars = shift;
     my $text = $chars->{Data};
 
-    given ( $self->current_tag ) {
-        warn "char current " . $self->current_tag . "\n";
+    my $e = $self->current_element;
+
+    given ( $e->{LocalName} ) {
         when ( /^(content|element)$/ ) {
-            warn "CONTENT TAG\n";
             if ( $text =~ /\S/ || $self->xsp_indent ) {
-                warn "INDENTY\n";
                 return '$self->add_text_node($document, $parent, ' . $self->quote_args( $text) . ');';
             }
             return '';
@@ -162,6 +137,17 @@ sub characters {
             $text =~ s/^\s*//; $text =~ s/\s*$//;
             $text = $self->quote_args( $text );
             return ". $text ";
+        }
+        when ( 'import' ) {
+            $text =~ s/^\s*//; $text =~ s/\s*$//;
+            my ($type) = grep { $_->{LocalName} eq 'type'} ( values %{$e->{Attributes}} );
+
+            if ( $type && $type->{Value} eq 'role') {
+                return "with '$text';";
+            }
+            else {
+                return "use $text;";
+            }
         }
     }
 
