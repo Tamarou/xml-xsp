@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<xsp:page xmlns:xsp="http://www.apache.org/1999/XSP/Core">
+<xsp:logic><![CDATA[
+has text_buffer => (
+    traits    => ['String'],
+    is          => 'rw',
+    isa         => 'Str',
+    default     => sub { return '' },
+    handles     => {
+          add_text   => 'append',
+          reset_text => 'clear',
+    },
+);
+
+]]></xsp:logic>
+
+  <page title="Testing antlery goodness">
+    <div id="test1">
+    <xsp:logic>
+        if ( $self->can('add_text') ) {
+            <p>Yep, trait accessor available.</p>
+            $self->add_text('some text added');
+        }
+        else {
+            <p class="error">Whoops</p>
+        }
+    </xsp:logic>
+    </div>
+    <hr/>
+    <div id="test2">
+    <xsp:logic>
+        if ( my $text = $self->text_buffer ) {
+            <p>Text buffer set got '<xsp:expr>$text</xsp:expr>'</p>
+        }
+        else {
+            <p class="error">Whoops, no text.</p>
+        }
+    </xsp:logic>
+    </div>
+  </page>
+</xsp:page>

@@ -105,20 +105,10 @@ sub start_element {
     my ($self, $e ) = @_;
     #warn Dumper( $e );
 
-    #warn "Start DEPTH " . $self->context_depth . " " . Dumper( $self->context_stack ) . "\n";
-
-
     # hand off to to the taglib if one is registered
     if ( length $e->{NamespaceURI} && $self->has_taglib($e->{NamespaceURI}) ) {
         $self->manage_text;
-###
-        # this permits class-level subs, attributes, etc by waiting until
-        # the first non-XSP start element event to emit the main wrapper sub
 
-        warn sprintf "WTF??? '%s' '%s' \n", $self->not_user_root, $e->{NamespaceURI};
-
-
-###
         # continue with the start_element processing
         my $taglib_package = $self->get_taglib( $e->{NamespaceURI} );
         if ( $taglib_package->can('start_element') ) {
@@ -129,6 +119,8 @@ sub start_element {
         }
     }
     else {
+        # this permits class-level subs, attributes, etc by waiting until
+        # the first non-XSP start element event to emit the main wrapper sub
         if ( $self->not_user_root ) {
             my $code = join "\n",
                 "\n",
@@ -147,7 +139,6 @@ sub start_element {
 
 sub end_element {
     my ($self, $e ) = @_;
-    #warn "End DEPTH " . $self->context_depth . " " . Dumper( $self->context_stack ) . "\n";
 
     # hand off to to the taglib if one is registered
     if ( length $e->{NamespaceURI} && $self->has_taglib($e->{NamespaceURI}) ) {
