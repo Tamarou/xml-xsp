@@ -10,7 +10,8 @@ has new_xsp => (
 );
 
 sub _build_new_xsp {
-    return XML::XSP->new();
+    my $self = shift;
+    return XML::XSP->new( @_ );
 }
 
 sub xml_tester {

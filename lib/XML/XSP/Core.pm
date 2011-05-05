@@ -5,6 +5,7 @@ with 'XML::XSP::SAXUtils';
 
 use Data::Dumper::Concise;
 
+sub namespace_uri { 'http://www.apache.org/1999/XSP/Core' };
 
 sub start_element {
     my $self = shift;

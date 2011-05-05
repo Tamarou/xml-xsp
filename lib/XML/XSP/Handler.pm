@@ -67,8 +67,21 @@ has package_name => (
 
 sub register_taglib {
     my $self = shift;
-    my ($xmlns, $package_name) = @_;
-    Class::MOP::load_class( $package_name );
+    my @args = @_;
+    my ($xmlns, $package_name) = (undef, undef);
+
+    if ( scalar @args == 1 ) {
+        $package_name = $args[0];
+        Class::MOP::load_class( $package_name );
+        $xmlns = $package_name->namespace_uri;
+    }
+    else {
+        $xmlns = $args[0];
+        $package_name = $args[1];
+        Class::MOP::load_class( $package_name );
+    }
+
+    warn "registering taglib $package_name with $xmlns \n";
     $self->add_taglib(
         $xmlns => $package_name->new(
             xsp_manage_text            => $self->xsp_manage_text,
@@ -105,9 +118,13 @@ sub start_element {
     my ($self, $e ) = @_;
     #warn Dumper( $e );
 
+        warn "BEFORE " . $e->{NamespaceURI};
+
     # hand off to to the taglib if one is registered
     if ( length $e->{NamespaceURI} && $self->has_taglib($e->{NamespaceURI}) ) {
         $self->manage_text;
+
+        warn "HANDING OFF " . $e->{NamespaceURI};
 
         # continue with the start_element processing
         my $taglib_package = $self->get_taglib( $e->{NamespaceURI} );

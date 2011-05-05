@@ -5,6 +5,8 @@ use XML::LibXML::SAX::Parser;
 use XML::XSP::Handler;
 use XML::Filter::BufferText;
 use Perl::Tidy;
+use Carp;
+BEGIN { $SIG{__DIE__} = sub { Carp::confess(@_) } }
 
 has config => (
     traits      => ['Hash'],
@@ -12,6 +14,23 @@ has config => (
     isa         => 'HashRef[Str]',
     default     => sub { {} },
 );
+
+has taglibs => (
+    traits      => ['Array'],
+    is          => 'rw',
+    isa         => 'ArrayRef',
+    required    => 1,
+    default     => sub { [] },
+    handles     => {
+        get_taglibs => 'elements',
+    },
+);
+
+sub _build_taglibs {
+    return [];
+    my $conf = shift->config;
+    return defined $conf->{taglibs} ? $conf->{taglibs} : [];
+}
 
 has sax_generator => (
     is          => 'ro',
@@ -43,11 +62,19 @@ has sax_handler => (
     is          => 'ro',
     isa         => 'XML::XSP::Handler',
     lazy_build  => 1,
-    handles     => [qw(package_name)],
+    handles     => [qw(package_name register_taglib)],
 );
 
 sub _build_sax_handler {
-    return XML::XSP::Handler->new();
+    my $self = shift;
+    my $taglibs = $self->taglibs;
+    my $xsp = XML::XSP::Handler->new();
+
+    foreach my $package_name ( $self->get_taglibs ) {
+        $xsp->register_taglib( $package_name );
+    }
+
+    return $xsp;
 }
 
 sub process {
