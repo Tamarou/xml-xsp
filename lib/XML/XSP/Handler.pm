@@ -5,6 +5,7 @@ use MooseX::NonMoose;
 extends 'XML::SAX::Base';
 with 'XML::XSP::SAXUtils';
 use XML::XSP::Default;
+use XML::XSP::Core;
 use XML::NamespaceSupport;
 
 use Data::Dumper::Concise;
@@ -46,6 +47,10 @@ has passthrough_handler => (
     default     => sub { XML::XSP::Default->new },
 );
 
+has core_handler => (
+    is          => 'rw',
+    isa         => 'XML::XSP::Core',
+);
 
 has current_taglib => (
     is          => 'rw',
@@ -65,25 +70,13 @@ has package_name => (
     default     => sub { 'Testy::Testerson' },
 );
 
-sub register_taglib {
+sub start_document {
     my $self = shift;
-    my @args = @_;
-    my ($xmlns, $package_name) = (undef, undef);
-
-    if ( scalar @args == 1 ) {
-        $package_name = $args[0];
-        Class::MOP::load_class( $package_name );
-        $xmlns = $package_name->namespace_uri;
-    }
-    else {
-        $xmlns = $args[0];
-        $package_name = $args[1];
-        Class::MOP::load_class( $package_name );
-    }
-
-    warn "registering taglib $package_name with $xmlns \n";
-    $self->add_taglib(
-        $xmlns => $package_name->new(
+    my $doc  = shift;
+    $self->reset_package;
+    $self->namespace_support->reset;
+    $self->core_handler(
+        XML::XSP::Core->new(
             xsp_manage_text            => $self->xsp_manage_text,
             xsp_avt_interpolate        => $self->xsp_avt_interpolate,
             xsp_indent                 => $self->xsp_indent,
@@ -91,14 +84,6 @@ sub register_taglib {
             xsp_attribute_name_context => $self->xsp_attribute_name_context,
         )
     );
-}
-
-sub start_document {
-    my $self = shift;
-    my $doc  = shift;
-    $self->reset_package;
-    $self->namespace_support->reset;
-    $self->register_taglib( $self->xsp_namespace => 'XML::XSP::Core' );
 
     my $code = join "\n",
         'package ' . $self->package_name . ';',
@@ -118,22 +103,10 @@ sub start_element {
     my ($self, $e ) = @_;
     #warn Dumper( $e );
 
-        warn "BEFORE " . $e->{NamespaceURI};
-
     # hand off to to the taglib if one is registered
-    if ( length $e->{NamespaceURI} && $self->has_taglib($e->{NamespaceURI}) ) {
+    if ( length $e->{NamespaceURI} && $e->{NamespaceURI} eq $self->xsp_namespace ) {
         $self->manage_text;
-
-        warn "HANDING OFF " . $e->{NamespaceURI};
-
-        # continue with the start_element processing
-        my $taglib_package = $self->get_taglib( $e->{NamespaceURI} );
-        if ( $taglib_package->can('start_element') ) {
-            $self->add_to_package( $taglib_package->start_element( $e ) );
-        }
-        elsif ( $taglib_package->can('parse_start') ) {
-            $self->add_to_package( $taglib_package->parse_start( $e->{LocalName}, $e ) );
-        }
+        $self->add_to_package( $self->core_handler->start_element( $e ) );
     }
     else {
         # this permits class-level subs, attributes, etc by waiting until
@@ -158,14 +131,8 @@ sub end_element {
     my ($self, $e ) = @_;
 
     # hand off to to the taglib if one is registered
-    if ( length $e->{NamespaceURI} && $self->has_taglib($e->{NamespaceURI}) ) {
-        my $taglib_package = $self->get_taglib( $e->{NamespaceURI} );
-        if ( $taglib_package->can('end_element') ) {
-            $self->add_to_package( $taglib_package->end_element( $e ) );
-        }
-        elsif ( $taglib_package->can('parse_end') ) {
-            $self->add_to_package( $taglib_package->parse_end( $e->{LocalName}, $e ) );
-        }
+    if ( length $e->{NamespaceURI} && $e->{NamespaceURI} eq $self->xsp_namespace ) {
+        $self->add_to_package( $self->core_handler->end_element( $e ) );
     }
     else {
         $self->add_to_package( $self->passthrough_handler->end_element( $e ) );
@@ -186,16 +153,12 @@ sub characters {
 
     my $context_element = $self->current_element;
 
-    if ( $context_element && $context_element->{NamespaceURI} && $self->has_taglib($context_element->{NamespaceURI}) ) {
 
-        # hand off to to the taglib if one is registered
-        my $taglib_package = $self->get_taglib( $context_element->{NamespaceURI} );
-        if ( $taglib_package->can('characters') ) {
-            $self->add_to_package( $taglib_package->characters( $text ) );
-        }
-        elsif ( $taglib_package->can('parse_char') ) {
-            $self->add_to_package( $taglib_package->parse_char( $text ) );
-        }
+    if ( $context_element &&
+         length $context_element->{NamespaceURI} &&
+         $context_element->{NamespaceURI} eq $self->xsp_namespace ) {
+
+        $self->add_to_package($self->core_handler->characters( $text ));
     }
     else {
         $self->add_to_package($self->passthrough_handler->characters( $text ));
