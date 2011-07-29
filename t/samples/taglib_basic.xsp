@@ -7,7 +7,7 @@
       my $now = localtime(time);
     </xsp:logic>
     <p>
-      At the tone the time will be <basic:foo><xsp:expr>$now</xsp:expr></basic:foo>. Please make a note of it.
+      At the tone the time will be <basic:reverse><xsp:expr>$now</xsp:expr></basic:reverse>. Please make a note of it.
     </p>
   </page>
 </xsp:page>

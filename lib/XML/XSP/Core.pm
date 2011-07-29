@@ -31,7 +31,7 @@ sub start_element {
                 $self->avt_uninterpolate if $interp eq 'no';
             }
         }
-        when ( 'import' ) {
+        when ( 'import' || 'structure' ) {
             #XXX
         }
         when ( 'element' ) {
@@ -166,7 +166,7 @@ sub end_element {
         when ( 'page' ) {
             #XXX
         }
-        when ( 'import' ) {
+        when ( 'import' || 'structure' ) {
             #XXX
         }
         when ( 'element' ) {

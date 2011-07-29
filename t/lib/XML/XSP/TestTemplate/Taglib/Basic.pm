@@ -29,7 +29,7 @@ __DATA__
   <xsl:apply-templates select="@*"/>
 
   <xsp:structure>
-    <xsp:include>use XML::XSP::TestTemplate::Taglib::Basic;</xsp:include>
+    <xsp:import>XML::XSP::TestTemplate::Taglib::Basic</xsp:import>
   </xsp:structure>
   <xsp:logic>
   my $obj = XML::XSP::TestTemplate::Taglib::Basic->new();
@@ -47,7 +47,7 @@ __DATA__
 
 -->
 <foo/>
-<xsp:expr>$obj->foo()</xsp:expr>
+<xsp:expr>$obj->foo('<xsl:copy-of select="./*"/>')</xsp:expr>
 
 </xsl:template>
 
