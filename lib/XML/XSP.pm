@@ -1,10 +1,14 @@
 package XML::XSP;
  # ABSTRACT: Stand-alone, modernized verion of the eXtensible Server Pages.
 use Moose;
+use XML::LibXML;
+use Scalar::Util qw(reftype);
+use XML::LibXSLT;
 use XML::LibXML::SAX::Parser;
 use XML::XSP::Handler;
 use XML::Filter::BufferText;
 use Perl::Tidy;
+use Data::Dumper::Concise;
 use Carp;
 BEGIN { $SIG{__DIE__} = sub { Carp::confess(@_) } }
 
@@ -16,14 +20,14 @@ has config => (
 );
 
 has taglibs => (
-    traits      => ['Array'],
-    is          => 'rw',
-    isa         => 'ArrayRef',
-    required    => 1,
-    default     => sub { [] },
+    traits      => ['Hash'],
+    is          => 'ro',
+    isa         => 'HashRef[Str]',
+    default     => sub { {} },
     handles     => {
-        get_taglibs => 'elements',
-    },
+        registered_taglibs    => 'keys',
+        fetch_taglib          => 'get',
+    }
 );
 
 sub _build_taglibs {
@@ -62,24 +66,52 @@ has sax_handler => (
     is          => 'ro',
     isa         => 'XML::XSP::Handler',
     lazy_build  => 1,
-    handles     => [qw(package_name register_taglib)],
+    handles     => [qw(package_name)],
 );
 
 sub _build_sax_handler {
     my $self = shift;
-    my $taglibs = $self->taglibs;
-    my $xsp = XML::XSP::Handler->new();
-
-    foreach my $package_name ( $self->get_taglibs ) {
-        $xsp->register_taglib( $package_name );
-    }
-
-    return $xsp;
+    return XML::XSP::Handler->new();
 }
 
 sub process {
     my $self = shift;
     my $dom  = shift;
+    my $root = $dom->documentElement;
+    my @used_taglibs = ();
+
+    foreach my $taglib_uri ($self->registered_taglibs) {
+        warn "Checking URI $taglib_uri\n";
+        if ($root->findvalue("count(//*[namespace-uri()='$taglib_uri'])") > 0) {
+            push @used_taglibs, $taglib_uri;
+        }
+    }
+
+    warn Dumper( \@used_taglibs );
+
+    my %loaded_processors = ();
+    my $xsl_proc = XML::LibXSLT->new;
+
+    foreach my $t (@used_taglibs) {
+        my $logicsheet = undef;
+
+        my $class_or_path = $self->fetch_taglib($t);
+        warn "WEV $class_or_path\n";
+        if (-f $class_or_path ) {
+            $logicsheet = XML::LibXML->load_xml(location => $class_or_path);
+        }
+        else {
+            Class::MOP::load_class($class_or_path);
+            my $obj = $class_or_path->new;
+            $logicsheet = XML::LibXML->load_xml(IO => $obj->logicsheet);
+        }
+        my $stylesheet = $xsl_proc->parse_stylesheet($logicsheet);
+        my $yuk = $stylesheet->transform( $dom );
+        warn "yuk " . Dumper( $yuk );
+        $dom = $yuk;
+    }
+
+
     my $code = $self->sax_generator->generate( $dom );
 
     #XXX make this a config flag

@@ -23,7 +23,7 @@ ok ( $package, 'Compiled perl class created' );
 warn $package;
 
 try {
-    eval "$package";
+    eval $package;
 }
 catch {
     my $err = $_;

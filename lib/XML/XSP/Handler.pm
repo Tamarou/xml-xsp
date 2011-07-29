@@ -28,17 +28,12 @@ has compiled_package => (
     },
 );
 
-has taglibs => (
-    traits      => ['Hash'],
+has taglib_classes => (
+    traits      => ['Array'],
     is          => 'rw',
-    isa         => 'HashRef[Object]',
+    isa         => 'ArrayRef',
     required    => 1,
-    default     => sub { {} },
-    handles     => {
-          add_taglib     => 'set',
-          get_taglib     => 'get',
-          has_taglib     => 'exists',
-    },
+    default     => sub { [] },
 );
 
 has passthrough_handler => (
@@ -89,6 +84,8 @@ sub start_document {
         'package ' . $self->package_name . ';',
         'use Moose;',
         "extends 'XML::XSP::Page';",
+        "use strict;",
+        "use warnings;"
     ;
     $self->add_to_package( $code );
 }

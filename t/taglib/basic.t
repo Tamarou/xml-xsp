@@ -1,12 +1,11 @@
 use Test::More;
 use strict;
 use FindBin;
-use lib "$FindBin::Bin/lib";
+use lib "$FindBin::Bin/../lib";
 use XML::LibXML;
 use Try::Tiny;
 use Data::Dumper::Concise;
 use_ok('XML::XSP::TestTemplate');
-
 my $template = XML::XSP::TestTemplate->new;
 my $xml_file = 't/samples/taglib_basic.xsp';
 
@@ -15,7 +14,12 @@ my $doc = XML::LibXML->new->parse_file( $xml_file );
 ok( $doc, "Source XML $xml_file parsed" );
 
 use XML::XSP;
-my $xsp = XML::XSP->new( taglibs => ['XML::XSP::TestTemplate::Taglib::Basic'] );
+my $xsp = XML::XSP->new(
+    taglibs => {
+        'http://www.tamarou.com/public/basic/v1' => 'XML::XSP::TestTemplate::Taglib::Basic',
+        'http://www.tamarou.com/public/bogus' => 'XML::XSP::TestTemplate::Taglib::NotThere',
+    },
+);
 
 ok( $xsp );
 
@@ -26,15 +30,13 @@ ok ( $package, 'Compiled perl class created' );
 
 warn $package;
 
-done_testing();
-
-=cut;
 
 try {
-    eval "$package";
+    eval $package;
 }
 catch {
     my $err = $_;
+    die "$err";
     ok(0, "Package eval failed: $err");
 };
 
@@ -44,12 +46,18 @@ can_ok( $package_name, qw(new xml_generator));
 
 my $instance = $package_name->new;
 
-ok( $instance->can('xml_generator'), 'Si Se Puede!');
+can_ok( $instance, qw(xml_generator));
 
 my $dom = $instance->xml_generator(undef, XML::LibXML::Document->new, undef);
 ok( $dom, 'Doc returned from generated code' );
 
 isa_ok( $dom, 'XML::LibXML::Document', 'Returned doc is a proper DOM tree');
+
+warn $dom->toString;
+
+done_testing();
+
+=cut;
 
 my $xt = $template->xml_tester( xml => $dom->toString );
 
