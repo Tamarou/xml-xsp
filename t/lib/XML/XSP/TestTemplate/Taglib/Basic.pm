@@ -9,10 +9,10 @@ sub logicsheet {
 }
 
 
-sub foo {
+sub reverse {
     my $self = shift;
     my $arg = shift;
-    return "foo called with $arg";
+    return $arg;
 }
 
 1;
@@ -39,7 +39,7 @@ __DATA__
 </xsp:page>
 </xsl:template>
 
-<xsl:template match="basic:foo">
+<xsl:template match="basic:reverse">
 <!--
     <xsp:expr>
         XML::XSP::TestTemplate::Taglib::Basic::foo(<xsl:copy-of select="./*" />);
@@ -47,7 +47,7 @@ __DATA__
 
 -->
 <foo/>
-<xsp:expr>$obj->foo('<xsl:copy-of select="./*"/>')</xsp:expr>
+<xsp:logic>$obj->reverse('<xsl:copy-of select="."/>')</xsp:logic>
 
 </xsl:template>
 
