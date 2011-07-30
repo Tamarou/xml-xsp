@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<xsp:page xmlns:xsp="http://www.apache.org/1999/XSP/Core">
+<xsp:page xmlns:xsp="http://apache.org/xsp">
 <xsp:logic><![CDATA[
 has text_buffer => (
     traits    => ['String'],
