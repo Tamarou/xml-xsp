@@ -111,6 +111,8 @@ sub process {
         $dom = $yuk;
     }
 
+    warn "AFTER " . $dom->toString;
+
 
     my $code = $self->sax_generator->generate( $dom );
 

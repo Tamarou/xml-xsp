@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<xsp:page   xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+            xmlns:cookie="http://www.tamarou.com/public/cookie"
+>
+  <page title="Time of Day">
+  <xsp:logic>
+  my $cookie_value  = 'nutterbutter';
+  my $cookie_value2 = 'oatmeal';
+  </xsp:logic>
+    <!-- straight attrs -->
+    <cookie:create name="nila" value="wafer"/>
+
+    <!-- straight child elements -->
+    <cookie:create>
+        <cookie:name>oreo</cookie:name>
+        <cookie:value>doublestuff</cookie:value>
+    </cookie:create>
+
+    <!-- interpolated AVT -->
+    <cookie:create name="tumbeasts" value="{$cookie_value2}"/>
+
+    <!-- intepolated expr -->
+    <cookie:create
+            name="peanutButter"
+            domain=".mydomain.tld"
+    >
+      <cookie:value><xsp:expr>$cookie_value</xsp:expr></cookie:value>
+      <cookie:expires><xsp:expr>$cookie_expiry</xsp:expr></cookie:expires>
+      <cookie:path><xsp:expr>$cookie_path</xsp:expr></cookie:path>
+    </cookie:create>
+    <html>
+        <body>
+            <p>Mmmm, cookies.</p>
+        </body>
+    </html>
+  </page>
+</xsp:page>

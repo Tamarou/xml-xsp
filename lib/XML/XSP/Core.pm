@@ -93,7 +93,8 @@ sub start_element {
             # XXX
         }
         when ( 'expr' ) {
-            if ( $self->is_non_xsp_text || ($parent && $parent->{LocalName} =~ /(content|element)/) ) {
+            #if ( $self->is_non_xsp_text || ($parent && $parent->{LocalName} =~
+            if ( ($parent && $parent->{LocalName} =~ /(content|element)/) ) {
                 return '$self->add_text_node($document, $parent, "" . do { ';
             }
             elsif ( $parent && $parent->{LocalName} =~ /(expr|logic)/ ) {
@@ -196,7 +197,8 @@ sub end_element {
             # XXX
         }
         when ( 'expr' ) {
-            if ( $self->is_non_xsp_text || ($parent && $parent->{LocalName} =~ /(content|element)/) ) {
+            #if ( $self->is_non_xsp_text || ($parent && $parent->{LocalName} =~
+            if ( ($parent && $parent->{LocalName} =~ /(content|element)/) ) {
                 $code .= '}); #core tag ' . "\n";
             }
             else {

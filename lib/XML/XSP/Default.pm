@@ -79,7 +79,7 @@ sub characters {
         return '';
     }
 
-    return '$self->add_text_node($document, $parent, ' . $self->quote_args( $text->{Data}) . ');';
+    return '$self->add_text_node($document, $parent, ' . $self->quote_args( $text->{Data}) . '); # non-xsp text' . "\n";
 }
 
 sub end_element {

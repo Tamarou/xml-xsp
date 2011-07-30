@@ -3,11 +3,12 @@ use strict;
 use FindBin;
 use lib "$FindBin::Bin/../lib";
 use XML::LibXML;
+use Carp qw(croak confess);
 use Try::Tiny;
 use Data::Dumper::Concise;
 use_ok('XML::XSP::TestTemplate');
 my $template = XML::XSP::TestTemplate->new;
-my $xml_file = 't/samples/taglib/basic.xsp';
+my $xml_file = 't/samples/taglib/cookie.xsp';
 
 my $doc = XML::LibXML->new->parse_file( $xml_file );
 
@@ -16,8 +17,7 @@ ok( $doc, "Source XML $xml_file parsed" );
 use XML::XSP;
 my $xsp = XML::XSP->new(
     taglibs => {
-        'http://www.tamarou.com/public/basic/v1' => 'XML::XSP::TestTemplate::Taglib::Basic',
-        'http://www.tamarou.com/public/bogus' => 'XML::XSP::TestTemplate::Taglib::NotThere',
+        'http://www.tamarou.com/public/cookie' => 'XML::XSP::TestTemplate::Taglib::Cookie',
     },
 );
 
@@ -48,12 +48,26 @@ my $instance = $package_name->new;
 
 can_ok( $instance, qw(xml_generator));
 
-my $dom = $instance->xml_generator(undef, XML::LibXML::Document->new, undef);
+my $dom = undef;
+
+try {
+    $dom = $instance->xml_generator(undef, XML::LibXML::Document->new, undef);
+}
+catch {
+    my $err = $_;
+    confess $err;
+};
 ok( $dom, 'Doc returned from generated code' );
 
 isa_ok( $dom, 'XML::LibXML::Document', 'Returned doc is a proper DOM tree');
 
 warn $dom->toString;
+
+my $resp = $instance->response;
+
+ok($resp);
+
+warn Dumper($resp);
 
 done_testing();
 

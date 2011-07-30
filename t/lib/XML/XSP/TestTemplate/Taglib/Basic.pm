@@ -47,7 +47,7 @@ __DATA__
 
 -->
 <foo/>
-<xsp:logic>$obj->reverse('<xsl:copy-of select="."/>')</xsp:logic>
+<xsp:expr>$obj->reverse('<xsl:copy-of select="./*"/>')</xsp:expr>
 
 </xsl:template>
 
