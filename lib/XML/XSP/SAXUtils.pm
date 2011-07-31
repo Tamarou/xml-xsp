@@ -119,21 +119,11 @@ sub parent {
     return $stack->[-2];
 }
 
-around 'start_element' => sub {
-    my $orig = shift;
-    my $self = shift;
-    my $e = shift;
-    $self->push_context( $e );
-    return $self->$orig( $e );
-};
-
-around 'end_element' => sub {
-    my $orig = shift;
-    my $self = shift;
-    my $e = shift;
-    my $ret = $self->$orig( $e );
-    $self->pop_context;
-    return $ret;
-};
+has xsp_namespace => (
+    is          => 'ro',
+    isa         => 'Str',
+    required    => 1,
+    default     => sub { 'http://www.apache.org/1999/XSP/Core' },
+);
 
 1;

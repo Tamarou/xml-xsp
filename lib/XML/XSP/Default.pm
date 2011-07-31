@@ -7,7 +7,7 @@ sub attribute_value_template {
     my $self = shift;
     my $input = shift;
 
-    warn "AVT INPUT $input \n";
+    #warn "AVT INPUT $input \n";
     # if the user turned off AVT interpolation or there are no
     # curlies in the value, just quote the input and return it.
     if ( $self->skip_avt_interpolation || $input !~ /{/ ) {
@@ -17,7 +17,7 @@ sub attribute_value_template {
     my $output = "''";
 
     while ($input =~ /\G([^{]*){/gc) {
-        warn "outer: $1\n";
+        #warn "outer: $1\n";
         $output .= "." . $self->quote_args( $1 ) if $1;
         if ($input =~ /\G{/gc) {
             $output .= ".q|{|";

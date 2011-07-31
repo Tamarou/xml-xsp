@@ -93,15 +93,20 @@ sub start_element {
             # XXX
         }
         when ( 'expr' ) {
-            #if ( $self->is_non_xsp_text || ($parent && $parent->{LocalName} =~
-            if ( ($parent && $parent->{LocalName} =~ /(content|element)/) ) {
+            my $parent_ns = $parent->{NamespaceURI};
+            if ( !$parent_ns || $parent_ns ne $self->xsp_namespace) {
                 return '$self->add_text_node($document, $parent, "" . do { ';
             }
-            elsif ( $parent && $parent->{LocalName} =~ /(expr|logic)/ ) {
-                return ' do {';
-            }
             else {
-                return ' . do {';
+                if ($parent->{LocalName} =~ /(content|element)/) {
+                    return '$self->add_text_node($document, $parent, "" . do { ';
+                }
+                elsif ($parent->{LocalName} =~ /(expr|logic)/ ) {
+                    return ' do {';
+                }
+                else {
+                    return ' . do {';
+                }
             }
         }
         default {
@@ -197,12 +202,14 @@ sub end_element {
             # XXX
         }
         when ( 'expr' ) {
-            #if ( $self->is_non_xsp_text || ($parent && $parent->{LocalName} =~
-            if ( ($parent && $parent->{LocalName} =~ /(content|element)/) ) {
-                $code .= '}); #core tag ' . "\n";
+            my $parent_ns = $parent->{NamespaceURI};
+            if ( length $parent_ns && $parent_ns eq $self->xsp_namespace && $parent->{LocalName} !~ /(content|element)/) {
+                $code .= '} ';
+
             }
             else {
-                $code .= '} ';
+                $code .= '}); #core tag ' . "\n";
+
         }
         }
         default {

@@ -10,13 +10,6 @@ use XML::NamespaceSupport;
 
 use Data::Dumper::Concise;
 
-has xsp_namespace => (
-    is          => 'ro',
-    isa         => 'Str',
-    required    => 1,
-    default     => sub { 'http://www.apache.org/1999/XSP/Core' },
-);
-
 has compiled_package => (
     traits    => ['String'],
     is          => 'rw',
@@ -39,8 +32,13 @@ has taglib_classes => (
 has passthrough_handler => (
     is          => 'ro',
     isa         => 'XML::XSP::Default',
-    default     => sub { XML::XSP::Default->new },
+    lazy_build  => 1,
 );
+
+sub _build_passthrough_handler {
+    my $self = shift;
+    return XML::XSP::Default->new( context_stack => $self->context_stack );
+}
 
 has core_handler => (
     is          => 'rw',
@@ -65,6 +63,23 @@ has package_name => (
     default     => sub { 'Testy::Testerson' },
 );
 
+around 'start_element' => sub {
+    my $orig = shift;
+    my $self = shift;
+    my $e = shift;
+    $self->push_context( $e );
+    return $self->$orig( $e );
+};
+
+around 'end_element' => sub {
+    my $orig = shift;
+    my $self = shift;
+    my $e = shift;
+    my $ret = $self->$orig( $e );
+    $self->pop_context;
+    return $ret;
+};
+
 sub start_document {
     my $self = shift;
     my $doc  = shift;
@@ -73,6 +88,7 @@ sub start_document {
     $self->core_handler(
         XML::XSP::Core->new(
             xsp_manage_text            => $self->xsp_manage_text,
+            context_stack              => $self->context_stack,
             xsp_avt_interpolate        => $self->xsp_avt_interpolate,
             xsp_indent                 => $self->xsp_indent,
             xsp_user_root              => $self->xsp_user_root,

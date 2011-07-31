@@ -87,8 +87,6 @@ sub process {
         }
     }
 
-    warn Dumper( \@used_taglibs );
-
     my %loaded_processors = ();
     my $xsl_proc = XML::LibXSLT->new;
 
@@ -96,7 +94,6 @@ sub process {
         my $logicsheet = undef;
 
         my $class_or_path = $self->fetch_taglib($t);
-        warn "WEV $class_or_path\n";
         if (-f $class_or_path ) {
             $logicsheet = XML::LibXML->load_xml(location => $class_or_path);
         }
@@ -106,12 +103,10 @@ sub process {
             $logicsheet = XML::LibXML->load_xml(IO => $obj->logicsheet);
         }
         my $stylesheet = $xsl_proc->parse_stylesheet($logicsheet);
-        my $yuk = $stylesheet->transform( $dom );
-        warn "yuk " . Dumper( $yuk );
-        $dom = $yuk;
+        $dom = $stylesheet->transform( $dom );
     }
 
-    warn "AFTER " . $dom->toString;
+    #warn "AFTER " . $dom->toString;
 
 
     my $code = $self->sax_generator->generate( $dom );
