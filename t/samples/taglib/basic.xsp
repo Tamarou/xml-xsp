@@ -4,10 +4,13 @@
 >
   <page title="Time of Day">
     <xsp:logic>
-      my $now = localtime(time);
+      $string = "some string";
     </xsp:logic>
-    <p>
-      At the tone the time will be <basic:reverse><xsp:expr>$now</xsp:expr></basic:reverse>. Please make a note of it.
-    </p>
+    <div class="nested">
+      <basic:backwards><xsp:expr>$string</xsp:expr></basic:backwards>. Please make a note of it.
+    </div>
+    <div class="text">
+        Straight string <basic:backwards>some string</basic:backwards>.
+    </next>
   </page>
 </xsp:page>

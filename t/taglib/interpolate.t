@@ -7,7 +7,7 @@ use Try::Tiny;
 use Data::Dumper::Concise;
 use_ok('XML::XSP::TestTemplate');
 my $template = XML::XSP::TestTemplate->new;
-my $xml_file = 't/samples/taglib/basic.xsp';
+my $xml_file = 't/samples/taglib/interpolate.xsp';
 
 my $doc = XML::LibXML->new->parse_file( $xml_file );
 
@@ -53,21 +53,17 @@ ok( $dom, 'Doc returned from generated code' );
 
 isa_ok( $dom, 'XML::LibXML::Document', 'Returned doc is a proper DOM tree');
 
-warn $dom->toString;
-
-done_testing();
-
-=cut
-
 my $xt = $template->xml_tester( xml => $dom->toString );
 
 ok( $xt );
 
 $xt->ok( '/page', 'Root element is "page"' );
 
-$xt->ok( '/page[@title]', 'Root element has a "title" attribute' );
+$xt->ok( '/page/div[@class="reversed"]' );
 
-$xt->is( 'count(/page/p)', 1, '"page" element has on "p" child' );
+my $reversed_content = $dom->findvalue('/page/div[@class="reversed"]/text()');
+
+unlike $reversed_content, qr|}|, "interpolation failed.";
 
 warn $dom->toString(1);
 

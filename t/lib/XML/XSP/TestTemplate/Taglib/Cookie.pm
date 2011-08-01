@@ -36,7 +36,7 @@ my $cookie_data = {};
     <xsl:when test="./cookie:value">
         <xsl:choose>
         <xsl:when test="./cookie:value//xsp:expr">
-            $cookie_data->{value} = qq|<xsl:copy-of select="./cookie:value/*"/>|;
+            $cookie_data->{value} = <xsl:copy-of select="./cookie:value/*"/>;
         </xsl:when>
         <xsl:otherwise>
             $cookie_data->{value} = qq|<xsl:value-of select="cookie:value/text()"/>|;

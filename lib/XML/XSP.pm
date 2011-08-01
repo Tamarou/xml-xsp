@@ -106,7 +106,7 @@ sub process {
         $dom = $stylesheet->transform( $dom );
     }
 
-    #warn "AFTER " . $dom->toString;
+    warn "AFTER " . $dom->toString;
 
 
     my $code = $self->sax_generator->generate( $dom );

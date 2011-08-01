@@ -16,9 +16,6 @@
         <cookie:value>doublestuff</cookie:value>
     </cookie:create>
 
-    <!-- interpolated AVT -->
-    <cookie:create name="tumbeasts" value="{$cookie_value2}"/>
-
     <!-- intepolated expr -->
     <cookie:create
             name="peanutButter"

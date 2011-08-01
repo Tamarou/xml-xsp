@@ -101,7 +101,11 @@ sub start_element {
                 if ($parent->{LocalName} =~ /(content|element)/) {
                     return '$self->add_text_node($document, $parent, "" . do { ';
                 }
-                elsif ($parent->{LocalName} =~ /(expr|logic)/ ) {
+                elsif ($parent->{LocalName} eq 'expr' ) {
+                    warn "PARENT EXPRESSION\n";
+                    return ' do {';
+                }
+                elsif ($parent->{LocalName} eq 'logic' ) {
                     return ' do {';
                 }
                 else {

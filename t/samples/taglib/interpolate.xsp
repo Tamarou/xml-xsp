@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<xsp:page   xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+            xmlns:basic="http://www.tamarou.com/public/basic/v1"
+>
+  <page title="Time of Day">
+    <xsp:logic>
+      my $direction = "forwards";
+    </xsp:logic>
+    <div class="reversed">
+        Pre tag. <basic:backwards><xsp:expr>$direction</xsp:expr></basic:backwards> Post tag.
+    </div>
+  </page>
+</xsp:page>

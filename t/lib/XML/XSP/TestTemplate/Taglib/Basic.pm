@@ -8,13 +8,6 @@ sub logicsheet {
     return *DATA;
 }
 
-
-sub reverse {
-    my $self = shift;
-    my $arg = shift;
-    return reverse $arg;
-}
-
 1;
 
 __DATA__
@@ -32,21 +25,23 @@ __DATA__
     <xsp:import>XML::XSP::TestTemplate::Taglib::Basic</xsp:import>
   </xsp:structure>
   <xsp:logic>
-  my $obj = XML::XSP::TestTemplate::Taglib::Basic->new();
+    sub backwards {
+        my $arg = shift;
+        return reverse $arg;
+    }
   </xsp:logic>
 
   <xsl:apply-templates/>
 </xsp:page>
 </xsl:template>
 
-<xsl:template match="basic:reverse">
+<xsl:template match="basic:backwards">
     <xsl:choose>
         <xsl:when test=".//xsp:expr">
-        <wtf><xsl:copy-of select="./*"/></wtf>
-            <xsp:expr>$obj->reverse(qq|<xsl:copy-of select="./*"/>|)</xsp:expr>
+            <xsp:expr>backwards(<xsl:copy-of select="./*"/>)</xsp:expr>
         </xsl:when>
         <xsl:otherwise>
-            <xsp:expr>$obj->reverse('<xsl:copy-of select="./text()"/>')</xsp:expr>
+            <xsp:expr>backwards(qq|<xsl:copy-of select="./text()"/>|)</xsp:expr>
         </xsl:otherwise>
     </xsl:choose>
 </xsl:template>
