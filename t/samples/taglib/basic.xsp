@@ -11,6 +11,6 @@
     </div>
     <div class="text">
         Straight string <basic:backwards>some string</basic:backwards>.
-    </next>
+    </div>
   </page>
 </xsp:page>

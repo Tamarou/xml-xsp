@@ -17,7 +17,7 @@ ok( $doc, "Source XML $xml_file parsed" );
 use XML::XSP;
 my $xsp = XML::XSP->new(
     taglibs => {
-        'http://www.tamarou.com/public/cookie' => 'XML::XSP::TestTemplate::Taglib::Cookie',
+        'http://www.tamarou.com/public/cookie' => 'share/logicsheets/cookie/library.xsl',
     },
 );
 
