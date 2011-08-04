@@ -3,7 +3,7 @@ package XML::XSP;
 use Moose;
 use XML::LibXML;
 use Scalar::Util qw(reftype);
-use XML::LibXSLT;
+use XML::XSP::XSLT;
 use XML::LibXML::SAX::Parser;
 use XML::XSP::Handler;
 use XML::Filter::BufferText;
@@ -88,7 +88,7 @@ sub process {
     }
 
     my %loaded_processors = ();
-    my $xsl_proc = XML::LibXSLT->new;
+    my $xsl_proc = XML::XSP::XSLT->new;
 
     foreach my $t (@used_taglibs) {
         my $logicsheet = undef;

@@ -2,6 +2,7 @@
 <xsl:stylesheet version="1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+    xmlns:xspx="http:/tamarou.com/namespace/xspextended/v1"
     xmlns:cookie="http://www.tamarou.com/public/cookie">
 
 <xsl:template match="xsp:page">
@@ -15,6 +16,8 @@
 <xsp:logic>{
 
 my $cookie_data = {};
+
+<xsl:variable name="test" select="xspx:extract_value('value', .)"/>
 
 <xsl:variable name="cookie-value">
     <xsl:choose>
