@@ -2,10 +2,13 @@
 <xsp:page   xmlns:xsp="http://www.apache.org/1999/XSP/Core"
             xmlns:cookie="http://www.tamarou.com/public/cookie"
 >
-  <page title="Time of Day">
+<html>
   <xsp:logic>
   my $cookie_value  = 'nutterbutter';
   my $cookie_value2 = 'oatmeal';
+  my $cookie_expiry = time + 24 * 60 * 60;
+  my $cookie_path = '/blog/';
+  my $cookie_name = 'chips';
   </xsp:logic>
     <!-- straight attrs -->
     <cookie:create name="nila" value="wafer"/>
@@ -25,10 +28,16 @@
       <cookie:expires><xsp:expr>$cookie_expiry</xsp:expr></cookie:expires>
       <cookie:path><xsp:expr>$cookie_path</xsp:expr></cookie:path>
     </cookie:create>
-    <html>
+
         <body>
-            <p>Mmmm, cookies.</p>
+          <div id="test1">
+            <p><cookie:fetch name="sugar"/></p>
+          </div>
+          <div id="test2">
+            <p><cookie:fetch>
+                <cookie:name><xsp:expr>$cookie_name</xsp:expr></cookie:name>
+            </cookie:fetch></p>
+          </div>
         </body>
-    </html>
-  </page>
+ </html>
 </xsp:page>

@@ -14,61 +14,47 @@
 
 <xsl:template match="cookie:create">
 <xsp:logic>{
-
 my $cookie_data = {};
+<xsl:variable name="cookie-name" select="xspx:extract_value('name', .)"/>
+<xsl:variable name="expires" select="xspx:extract_value('expires', .)"/>
+<xsl:variable name="path" select="xspx:extract_value('path', .)"/>
+<xsl:variable name="domain" select="xspx:extract_value('domain', .)"/>
+<xsl:variable name="secure" select="xspx:extract_value('secure ', .)"/>
 
-<xsl:variable name="test" select="xspx:extract_value('value', .)"/>
+<xsl:if test="$expires">
+$cookie_data->{expires} = <xsl:value-of select="$expires"/>;
+</xsl:if>
 
-<xsl:variable name="cookie-value">
-    <xsl:choose>
-        <xsl:when test="@value">"<xsl:value-of select="@value"/>"</xsl:when>
-        <xsl:when test="cookie:value">
-            <xsl:call-template name="get-nested-content">
-                <xsl:with-param name="content" select="cookie:value"/>
-            </xsl:call-template>
-        </xsl:when>
-    </xsl:choose>
-</xsl:variable>
+<xsl:if test="$path">
+$cookie_data->{path} = <xsl:value-of select="$path"/>;
+</xsl:if>
 
-<xsl:variable name="cookie-name">
-    <xsl:choose>
-        <xsl:when test="@name">"<xsl:value-of select="@name"/>"</xsl:when>
-        <xsl:when test="cookie:name">
-            <xsl:call-template name="get-nested-content">
-                <xsl:with-param name="content" select="cookie:name"/>
-            </xsl:call-template>
-        </xsl:when>
-    <xsl:otherwise>
-    feh
-    </xsl:otherwise>
-    </xsl:choose>
-</xsl:variable>
+<xsl:if test="$domain">
+$cookie_data->{domain} = <xsl:value-of select="$domain"/>;
+</xsl:if>
 
-$cookie_data->{value} = <xsl:value-of select="$cookie-value"/>;
+<xsl:if test="$secure">
+$cookie_data->{secure} = <xsl:value-of select="$secure"/>;
+</xsl:if>
 
+$cookie_data->{value} = <xsl:value-of select="xspx:extract_value('value', .)"/>;
 
 $self->response->{cookies}->{<xsl:value-of select="$cookie-name"/>} = $cookie_data;
 
-<meh><xsl:value-of select="$cookie-name"/></meh>
 }</xsp:logic>
 </xsl:template>
+
+<xsl:template match="cookie:fetch">
+<xsl:variable name="cookie-name" select="xspx:extract_value('name', .)"/>
+<xsl:if test="$cookie-name">
+    <xsp:expr>$self->request->cookies->{<xsl:value-of select="$cookie-name"/>} || ''</xsp:expr>
+</xsl:if>
+</xsl:template>
+
 
 <xsl:template match="@*|*|text()|processing-instruction()">
     <xsl:copy>
         <xsl:apply-templates select="@*|*|text()|processing-instruction()" />
     </xsl:copy>
 </xsl:template>
-
-  <xsl:template name="get-nested-content">
-    <xsl:param name="content"/>
-    <xsl:choose>
-      <xsl:when test="$content/xsp:text">"<xsl:value-of select="$content"/>"</xsl:when>
-      <xsl:when test="$content/*">
-        <xsl:apply-templates select="$content/*"/>
-      </xsl:when>
-      <xsl:otherwise>"<xsl:value-of select="$content"/>"</xsl:otherwise>
-    </xsl:choose>
-  </xsl:template>
-
-
 </xsl:stylesheet>

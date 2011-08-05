@@ -5,8 +5,12 @@ use lib "$FindBin::Bin/../lib";
 use XML::LibXML;
 use Carp qw(croak confess);
 use Try::Tiny;
+use Plack::Request;
 use Data::Dumper::Concise;
+
 use_ok('XML::XSP::TestTemplate');
+use_ok('XML::XSP');
+
 my $template = XML::XSP::TestTemplate->new;
 my $xml_file = 't/samples/taglib/cookie.xsp';
 
@@ -14,7 +18,8 @@ my $doc = XML::LibXML->new->parse_file( $xml_file );
 
 ok( $doc, "Source XML $xml_file parsed" );
 
-use XML::XSP;
+my $req = Plack::Request->new({ HTTP_COOKIE => "sugar=sweet; chips=ahoy" });
+
 my $xsp = XML::XSP->new(
     taglibs => {
         'http://www.tamarou.com/public/cookie' => 'share/logicsheets/cookie/library.xsl',
@@ -27,9 +32,6 @@ ok( $xsp );
 my $package = $xsp->process( $doc );
 
 ok ( $package, 'Compiled perl class created' );
-
-warn $package;
-
 
 try {
     eval $package;
@@ -44,7 +46,7 @@ my $package_name = $xsp->package_name;
 
 can_ok( $package_name, qw(new xml_generator));
 
-my $instance = $package_name->new;
+my $instance = $package_name->new( request => $req );
 
 can_ok( $instance, qw(xml_generator));
 
@@ -61,28 +63,18 @@ ok( $dom, 'Doc returned from generated code' );
 
 isa_ok( $dom, 'XML::LibXML::Document', 'Returned doc is a proper DOM tree');
 
-warn $dom->toString;
-
 my $resp = $instance->response;
 
-ok($resp);
-
-warn Dumper($resp);
-
-done_testing();
-
-=cut;
+ok($resp->cookies);
 
 my $xt = $template->xml_tester( xml => $dom->toString );
 
 ok( $xt );
 
-$xt->ok( '/page', 'Root element is "page"' );
+$xt->ok( '/html', 'Root element is "html"' );
 
-$xt->ok( '/page[@title]', 'Root element has a "title" attribute' );
+$xt->is( '/html/body/div[@id="test1"]/p/text()', 'sweet', 'cookie fetched.');
 
-$xt->is( 'count(/page/p)', 1, '"page" element has on "p" child' );
-
-warn $dom->toString(1);
+$xt->is( '/html/body/div[@id="test2"]/p/text()', 'ahoy', 'interpolated cookie fetched.');
 
 done_testing();
