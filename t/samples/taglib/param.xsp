@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<xsp:page   xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+            xmlns:param="http://axkit.org/NS/xsp/param/v1"
+>
+<html>
+  <xsp:logic>
+  my $param_name = 'option1';
+  </xsp:logic>
+        <body>
+          <div id="test1">
+            <p><param:option1/></p>
+          </div>
+        </body>
+ </html>
+</xsp:page>
