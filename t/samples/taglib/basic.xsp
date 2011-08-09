@@ -4,11 +4,12 @@
 >
   <page title="Time of Day">
     <xsp:logic>
-      $string = "some string";
+      my $string = "some string";
     </xsp:logic>
     <div class="nested">
-      <basic:backwards><xsp:expr>$string</xsp:expr></basic:backwards>. Please make a note of it.
+      a <basic:backwards><xsp:expr>$string</xsp:expr></basic:backwards>. Please make a note of it.
     </div>
+
     <div class="text">
         Straight string <basic:backwards>some string</basic:backwards>.
     </div>

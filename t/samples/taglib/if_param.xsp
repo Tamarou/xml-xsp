@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<xsp:page   xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+            xmlns:if-param="http://axkit.org/NS/xsp/if-param/v1"
+>
+<html>
+  <xsp:logic>
+  my $param_name = 'option1';
+  </xsp:logic>
+        <body>
+          <div id="test1">
+            <if-param:option1>
+              <p>param found</p>
+            </if-param:option1>
+          </div>
+        </body>
+ </html>
+</xsp:page>

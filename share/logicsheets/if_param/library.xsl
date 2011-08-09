@@ -3,7 +3,7 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns:xsp="http://www.apache.org/1999/XSP/Core"
     xmlns:xspx="http:/tamarou.com/namespace/xspextended/v1"
-    xmlns:param="http://axkit.org/NS/xsp/param/v1">
+    xmlns:if-param="http://axkit.org/NS/xsp/if-param/v1">
 
 <xsl:template match="xsp:page">
  <xsl:copy>
@@ -12,8 +12,14 @@
  </xsl:copy>
 </xsl:template>
 
-<xsl:template match="param:*">
-<xsp:expr>$self->request->param(q|<xsl:value-of select="local-name()"/>|) || ''</xsp:expr>
+<xsl:template match="if-param:*">
+
+<xsp:logic>
+if ( $self->request->param('<xsl:value-of select="local-name()"/>') ) {
+    <xsl:apply-templates/>
+}
+</xsp:logic>
+
 </xsl:template>
 
 
