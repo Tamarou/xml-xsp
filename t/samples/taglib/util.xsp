@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<xsp:page   xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+            xmlns:util="http://apache.org/xsp/util/v1"
+>
+<html>
+  <xsp:logic><![CDATA[
+  my $file_one = './t/samples/taglib/interpolate.xsp';
+  my $fragment = '<howdy/>';
+  ]]></xsp:logic>
+        <body>
+          <div id="test1">
+            <util:include_file name="./t/samples/taglib/interpolate.xsp"/>
+          </div>
+          <div id="test2">
+            <util:include_file>
+            <util:name>./t/samples/taglib/interpolate.xsp</util:name>
+            </util:include_file>
+          </div>
+          <div id="test3">
+            <util:include_file>
+            <util:name><xsp:expr>$file_one</xsp:expr></util:name>
+            </util:include_file>
+          </div>
+          <!-- uncomment to run remote tests
+          <div id="test4">
+            <util:include_uri href="http://spidr.ngdc.noaa.gov/spidr/servlet/GetMetadata?param=iono.BC840"/>
+          </div>
+          -->
+          <div id="test5">
+            <util:include_expr>
+            <xsp:expr>$fragment</xsp:expr>
+            </util:include_expr>
+          </div>
+
+        </body>
+ </html>
+</xsp:page>
