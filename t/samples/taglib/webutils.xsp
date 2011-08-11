@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<xsp:page   xmlns:xsp="http://www.apache.org/1999/XSP/Core"
+            xmlns:web="http://axkit.org/NS/xsp/webutils/v1"
+>
+<html>
+  <xsp:logic>
+  my $to_encode = 'fill in the blanks';
+  my $cookie_value2 = 'oatmeal';
+  my $cookie_expiry = time + 24 * 60 * 60;
+  my $cookie_path = '/blog/';
+  my $cookie_name = 'chips';
+  </xsp:logic>
+        <body>
+          <div id="url_encode1">
+            <p><web:url_encode>fill in the blanks</web:url_encode></p>
+          </div>
+          <div id="url_encode2">   <p><web:url_encode><xsp:expr>$to_encode</xsp:expr></web:url_encode></p>
+          </div>
+          <div id="env_param">
+          <p><web:env_param name="QUERY_STRING"/></p>
+          </div>
+
+        </body>
+ </html>
+</xsp:page>
