@@ -18,7 +18,21 @@ my $doc = XML::LibXML->new->parse_file( $xml_file );
 
 ok( $doc, "Source XML $xml_file parsed" );
 
-my $req = Plack::Request->new({ QUERY_STRING => "option1=first_option" });
+my $qs = 'option1=first_option';
+
+my $req = Plack::Request->new({
+    REQUEST_METHOD    => 'GET',
+    SERVER_PROTOCOL   => 'HTTP/1.1',
+    SERVER_PORT       => 80,
+    SERVER_NAME       => 'example.com',
+    SCRIPT_NAME       => '/foo',
+    REMOTE_ADDR       => '127.0.0.1',
+    QUERY_STRING      => $qs,
+    'psgi.version'    => [ 1, 0 ],
+    'psgi.input'      => undef,
+    'psgi.errors'     => undef,
+    'psgi.url_scheme' => 'http',
+});
 
 my $xsp = XML::XSP->new(
     taglibs => {
@@ -48,14 +62,14 @@ my $package_name = $xsp->package_name;
 
 can_ok( $package_name, qw(new xml_generator));
 
-my $instance = $package_name->new( request => $req );
+my $instance = $package_name->new();
 
 can_ok( $instance, qw(xml_generator));
 
 my $dom = undef;
 
 try {
-    $dom = $instance->xml_generator(undef, XML::LibXML::Document->new, undef);
+    $dom = $instance->xml_generator($req, XML::LibXML::Document->new, undef);
 }
 catch {
     my $err = $_;
@@ -78,6 +92,16 @@ $xt->ok( '/html', 'Root element is "html"' );
 $xt->is( '/html/body/div[@id="url_encode1"]/p/text()', URI::Escape::uri_escape('fill in the blanks'), 'Plain string encoded.');
 
 $xt->is( '/html/body/div[@id="url_encode2"]/p/text()', URI::Escape::uri_escape('fill in the blanks'), 'Interpolated string encoded.');
+
+$xt->is( '/html/body/div[@id="env_param"]/p/text()', $qs, 'Environment parameter.');
+
+$xt->is( '/html/body/div[@id="query_string"]/p/text()', $qs, 'Query string.');
+
+$xt->is( '/html/body/div[@id="request_uri"]/p/text()', 'http://example.com/foo?option1=first_option', 'Request URI.');
+
+$xt->is( '/html/body/div[@id="request_host"]/p/text()', 'example.com', 'Request URI.');
+
+$xt->is( '/html/body/div[@id="is_https"]/p/text()', '', 'Secure request.');
 
 warn $dom->toString(1);
 

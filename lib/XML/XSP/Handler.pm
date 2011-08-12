@@ -129,7 +129,8 @@ sub start_element {
                 "\n",
                 'sub xml_generator {',
                 'my $self = shift;',
-                'my ($r, $document, $parent) = @_;'
+                'my ($r, $document, $parent) = @_;',
+                '$self->request($r) if defined $r;'
             ;
             $self->add_to_package( $code );
             $self->set_user_root;

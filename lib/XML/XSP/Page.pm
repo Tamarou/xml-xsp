@@ -11,9 +11,8 @@ has xml_document => (
 
 #XXX formalize the object types for request, context response.
 has request => (
-    is          => 'ro',
+    is          => 'rw',
     isa         => 'Object',
-    #required    => 1,
 );
 
 has response => (

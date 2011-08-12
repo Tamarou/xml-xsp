@@ -42,6 +42,50 @@
 </xsl:choose>
 </xsl:template>
 
+<xsl:template match="web:path_info">
+<xsp:expr>$self->request->path_info || ''</xsp:expr>
+</xsl:template>
+
+<xsl:template match="web:query_string">
+<xsp:expr>$self->request->env->{QUERY_STRING} || ''</xsp:expr>
+</xsl:template>
+
+<xsl:template match="web:request_uri">
+<xsp:expr>$self->request->uri || ''</xsp:expr>
+</xsl:template>
+
+<xsl:template match="web:request_host">
+<xsp:expr>$self->request->env->{HTTP_HOST} || $self->request->env->{SERVER_NAME} || ''</xsp:expr>
+</xsl:template>
+
+<xsl:template match="web:header">
+<xsl:variable name="header-name" select="xspx:extract_value('name', .)"/>
+<xsl:variable name="header-value" select="xspx:extract_value('value', .)"/>
+<xsl:choose>
+<xsl:when test="$header-value">
+<xsp:logic>
+$self->request->header(<xsl:value-of select="$name"/> => '<xsl:value-of select="$name"/>')
+</xsp:logic>
+</xsl:when>
+<xsl:otherwise>
+<xsp:expr>$self->request->header(<xsl:value-of select="$name"/>)</xsp:expr>
+</xsl:otherwise>
+</xsl:choose>
+</xsl:template>
+
+<xsl:template match="web:match_user_agent">
+<xsl:variable name="ua-name" select="xspx:extract_value('name', .)"/>
+<xsp:expr>$self->request->user_agent =~ qr|<xsl:value-of select="$ua-name"/>|</xsp:expr>
+</xsl:template>
+
+<xsl:template match="web:username">
+<xsp:expr>$self->request->user || ''</xsp:expr>
+</xsl:template>
+
+<xsl:template match="web:is_https">
+<xsp:expr>$self->request->secure</xsp:expr>
+</xsl:template>
+
 <xsl:template match="@*|*|text()|processing-instruction()">
     <xsl:copy>
         <xsl:apply-templates select="@*|*|text()|processing-instruction()" />
