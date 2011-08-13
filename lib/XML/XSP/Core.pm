@@ -29,9 +29,6 @@ sub start_element {
                 $self->avt_uninterpolate if $interp eq 'no';
             }
         }
-        when ( 'import' || 'structure' ) {
-            #XXX
-        }
         when ( 'element' ) {
             # XXX could do some error trapping here to (for example)
             # make sure this element isn't a child of <xsp:attribute>
@@ -39,9 +36,6 @@ sub start_element {
                 $self->unmanage_text;
                 return '$parent = $self->add_element_node($document, $parent, ' . $self->quote_args($name) . ');';
             }
-        }
-        when ( 'logic' ) {
-            # XXX
         }
         when ( 'attribute' ) {
             if (my $uri = $attrs{uri} ) {
@@ -81,15 +75,6 @@ sub start_element {
                 die "XSP 'name' element found in invalid context: '". $parent->{LocalName} . "'";
             }
         }
-        when ( 'pi' ) {
-            # XXX ???
-        }
-        when ( 'comment' ) {
-            # XXX
-        }
-        when ( 'text' ) {
-            # XXX
-        }
         when ( 'expr' ) {
             my $parent_ns = $parent->{NamespaceURI};
             if ( !$parent_ns || $parent_ns ne $self->xsp_namespace) {
@@ -109,6 +94,9 @@ sub start_element {
                     return ' . do {';
                 }
             }
+        }
+        when ([qw( import structure logic pi comment text)]) {
+            #XXX no-op
         }
         default {
             warn "Unknown XSP element '" . $e->{LocalName} . "'\n";
@@ -170,11 +158,8 @@ sub end_element {
     my $parent = $self->parent;
 
     given ( $e->{LocalName} ) {
-        when ( 'page' ) {
-            #XXX
-        }
-        when ( 'import' || 'structure' ) {
-            #XXX
+        when ([qw(page import structure comment text pi comment text logic)]) {
+            #XXX no-op
         }
         when ( 'element' ) {
             return '$parent = $parent->getParentNode;' . "\n";
@@ -190,18 +175,6 @@ sub end_element {
                 return ', ""';
             }
         }
-        when ( 'pi' ) {
-            # XXX ???
-        }
-        when ( 'comment' ) {
-            # XXX
-        }
-        when ( 'text' ) {
-            # XXX
-        }
-        when ( 'logic' ) {
-            # XXX
-        }
         when ( 'expr' ) {
             my $parent_ns = $parent->{NamespaceURI};
             if ( length $parent_ns && $parent_ns eq $self->xsp_namespace && $parent->{LocalName} !~ /(content|element)/) {
@@ -214,7 +187,7 @@ sub end_element {
         }
         }
         default {
-            warn "Unknown XSP element '" . $e->{LocalName} . "'\n";
+            warn "Unknown --- XSP element '" . $e->{LocalName} . "'\n";
         }
     }
 
