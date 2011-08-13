@@ -18,8 +18,8 @@ has request => (
 has response => (
     is          => 'ro',
     isa         => 'Object',
-    default     => sub { Class::MOP::load_class('Plack::Response'); return Plack::Response->new(200); }
-    #required    => 1,
+    default     => sub { Class::MOP::load_class('Plack::Response'); return Plack::Response->new(200); },
+    predicate   => 'has_response',
 );
 
 has context => (
