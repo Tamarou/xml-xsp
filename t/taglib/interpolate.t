@@ -4,7 +4,6 @@ use FindBin;
 use lib "$FindBin::Bin/../lib";
 use XML::LibXML;
 use Try::Tiny;
-use Data::Dumper::Concise;
 use_ok('XML::XSP::TestTemplate');
 my $template = XML::XSP::TestTemplate->new;
 my $xml_file = 't/samples/taglib/interpolate.xsp';
@@ -28,8 +27,7 @@ my $package = $xsp->process( $doc );
 
 ok ( $package, 'Compiled perl class created' );
 
-warn $package;
-
+#warn $package;
 
 try {
     eval $package;
@@ -65,6 +63,6 @@ my $reversed_content = $dom->findvalue('/page/div[@class="reversed"]/text()');
 
 unlike $reversed_content, qr|}|, "interpolation failed.";
 
-warn $dom->toString(1);
+#warn $dom->toString(1);
 
 done_testing();

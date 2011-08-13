@@ -4,7 +4,6 @@ use FindBin;
 use lib "$FindBin::Bin/lib";
 use XML::LibXML;
 use Try::Tiny;
-use Data::Dumper::Concise;
 use_ok('XML::XSP::TestTemplate');
 
 my $template = XML::XSP::TestTemplate->new;
@@ -20,7 +19,7 @@ my $package = $xsp->process( $doc );
 
 ok ( $package, 'Compiled perl class created' );
 
-warn $package;
+#warn $package;
 
 try {
     eval "$package";
@@ -53,6 +52,6 @@ $xt->ok( '/page[@title]', 'Root element has a "title" attribute' );
 
 $xt->is( 'count(/page/p)', 1, '"page" element has on "p" child' );
 
-warn $dom->toString(1);
+#warn $dom->toString(1);
 
 done_testing();

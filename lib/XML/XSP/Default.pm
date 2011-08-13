@@ -1,7 +1,6 @@
 package XML::XSP::Default;
 use Moose;
 with 'XML::XSP::SAXUtils';
-use Data::Dumper::Concise;
 
 sub attribute_value_template {
     my $self = shift;
@@ -28,7 +27,7 @@ sub attribute_value_template {
         $output .= ".do{";
 
         while ($input =~ /\G([^}]*)}/gc) {
-            warn "inner: $1\n";
+            #warn "inner: $1\n";
             $output .= undouble_curlies( $1 );
             if ($input =~ /\G}/gc) {
                 $output .= "}";

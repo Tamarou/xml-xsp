@@ -6,7 +6,6 @@ use XML::LibXML;
 use Try::Tiny;
 use Plack::Request;
 use URI::Escape ();
-use Data::Dumper::Concise;
 
 use_ok('XML::XSP::TestTemplate');
 use_ok('XML::XSP');
@@ -56,7 +55,7 @@ catch {
     ok(0, "Package eval failed: $err");
 };
 
-warn $package;
+#warn $package;
 
 my $package_name = $xsp->package_name;
 
@@ -103,6 +102,6 @@ $xt->is( '/html/body/div[@id="request_host"]/p/text()', 'example.com', 'Request 
 
 $xt->is( '/html/body/div[@id="is_https"]/p/text()', '', 'Secure request.');
 
-warn $dom->toString(1);
+#warn $dom->toString(1);
 
 done_testing();

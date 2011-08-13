@@ -5,9 +5,7 @@ use lib "$FindBin::Bin/../lib";
 use XML::LibXML;
 use Carp qw(croak confess);
 use Try::Tiny;
-use Plack::Request;
-use Data::Dumper::Concise;
-
+use_ok('Plack::Request');
 use_ok('XML::XSP::TestTemplate');
 use_ok('XML::XSP');
 

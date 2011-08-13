@@ -4,9 +4,7 @@ use FindBin;
 use lib "$FindBin::Bin/../lib";
 use XML::LibXML;
 use Try::Tiny;
-use Plack::Request;
-use Data::Dumper::Concise;
-
+use_ok('Plack::Request');
 use_ok('XML::XSP::TestTemplate');
 use_ok('XML::XSP');
 
@@ -49,7 +47,7 @@ my $instance = $package_name->new( request => $req );
 
 can_ok( $instance, qw(xml_generator));
 
-warn $package;
+#warn $package;
 
 my $dom = undef;
 

@@ -4,7 +4,6 @@ use FindBin;
 use lib "$FindBin::Bin/../lib";
 use XML::LibXML;
 use Try::Tiny;
-use Data::Dumper::Concise;
 use_ok('XML::XSP::TestTemplate');
 
 my $template = XML::XSP::TestTemplate->new;
@@ -20,7 +19,7 @@ my $package = $xsp->process( $doc );
 
 ok ( $package, 'Compiled perl class created' );
 
-warn $package;
+#warn $package;
 
 try {
     eval "$package";
@@ -51,12 +50,6 @@ $xt->ok( '/page', 'Root element is "page"' );
 
 $xt->ok( '/page/one', 'Element "one" created.' );
 
-# $xt->is( '/page/baldrick', 'Um, some beans and some beans is some beans.', 'Interpolation worked.' );
-#
-# $xt->ok( '/page/join', 'Join element created.' );
-#
-# $xt->is( '/page/join', 'some::some::some', 'Inlined function works' );
-
-warn $dom->toString(1);
+#warn $dom->toString(1);
 
 done_testing();

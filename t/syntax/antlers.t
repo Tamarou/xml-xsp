@@ -4,7 +4,6 @@ use FindBin;
 use lib "$FindBin::Bin/../lib";
 use XML::LibXML;
 use Try::Tiny;
-use Data::Dumper::Concise;
 use_ok('XML::XSP::TestTemplate');
 
 my $template = XML::XSP::TestTemplate->new;
@@ -20,7 +19,7 @@ my $package = $xsp->process( $doc );
 
 ok ( $package, 'Compiled perl class created' );
 
-warn $package;
+#warn $package;
 
 try {
     eval $package;
@@ -55,6 +54,6 @@ $xt->is( '/page/div[@id="test1"]/p/text()', 'Yep, trait accessor available.', 'T
 
 $xt->is( '/page/div[@id="test2"]/p/text()', "Text buffer set got 'some text added'", 'Trait accessor worked.' );
 
-warn $dom->toString(1);
+#warn $dom->toString(1);
 
 done_testing();

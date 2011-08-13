@@ -81,7 +81,6 @@ sub process {
     my @used_taglibs = ();
 
     foreach my $taglib_uri ($self->registered_taglibs) {
-        warn "Checking URI $taglib_uri\n";
         if ($root->findvalue("count(//*[namespace-uri()='$taglib_uri'])") > 0) {
             push @used_taglibs, $taglib_uri;
         }
@@ -106,7 +105,7 @@ sub process {
         $dom = $stylesheet->transform( $dom );
     }
 
-    warn "AFTER " . $dom->toString;
+    #warn "AFTER " . $dom->toString;
 
 
     my $code = $self->sax_generator->generate( $dom );

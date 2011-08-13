@@ -4,7 +4,6 @@ use FindBin;
 use lib "$FindBin::Bin/../lib";
 use XML::LibXML;
 use Try::Tiny;
-use Data::Dumper::Concise;
 use_ok('XML::XSP::TestTemplate');
 
 my $template = XML::XSP::TestTemplate->new;
@@ -20,7 +19,7 @@ my $package = $xsp->process( $doc );
 
 ok ( $package, 'Compiled perl class created' );
 
-warn $package;
+#warn $package;
 
 try {
     eval "$package";
@@ -57,6 +56,6 @@ $xt->ok( '/page/p/@second_class', '"p" element has a "second_class" attribute. "
 
 $xt->is( '/page/p/@second_class', 'some other value', '"second_class" attribute value set.' );
 
-warn $dom->toString(1);
+#warn $dom->toString(1);
 
 done_testing();

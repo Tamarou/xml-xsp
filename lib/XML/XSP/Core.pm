@@ -3,8 +3,6 @@ use feature "switch";
 use Moose;
 with 'XML::XSP::SAXUtils';
 
-use Data::Dumper::Concise;
-
 sub namespace_uri { 'http://www.apache.org/1999/XSP/Core' };
 
 sub start_element {
@@ -102,7 +100,6 @@ sub start_element {
                     return '$self->add_text_node($document, $parent, "" . do { ';
                 }
                 elsif ($parent->{LocalName} eq 'expr' ) {
-                    warn "PARENT EXPRESSION\n";
                     return ' do {';
                 }
                 elsif ($parent->{LocalName} eq 'logic' ) {

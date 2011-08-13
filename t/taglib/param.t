@@ -4,9 +4,7 @@ use FindBin;
 use lib "$FindBin::Bin/../lib";
 use XML::LibXML;
 use Try::Tiny;
-use Plack::Request;
-use Data::Dumper::Concise;
-
+use_ok('Plack::Request');
 use_ok('XML::XSP::TestTemplate');
 use_ok('XML::XSP');
 
@@ -74,6 +72,6 @@ $xt->ok( '/html', 'Root element is "html"' );
 
 $xt->is( '/html/body/div[@id="test1"]/p/text()', 'first_option', 'param fetched.');
 
-warn $dom->toString(1);
+#warn $dom->toString(1);
 
 done_testing();

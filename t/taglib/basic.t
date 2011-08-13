@@ -4,7 +4,6 @@ use FindBin;
 use lib "$FindBin::Bin/../lib";
 use XML::LibXML;
 use Try::Tiny;
-use Data::Dumper::Concise;
 use_ok('XML::XSP::TestTemplate');
 my $template = XML::XSP::TestTemplate->new;
 my $xml_file = 't/samples/taglib/basic.xsp';
@@ -28,8 +27,7 @@ my $package = $xsp->process( $doc );
 
 ok ( $package, 'Compiled perl class created' );
 
-warn $package;
-
+#warn $package;
 
 try {
     eval $package;
@@ -53,22 +51,6 @@ ok( $dom, 'Doc returned from generated code' );
 
 isa_ok( $dom, 'XML::LibXML::Document', 'Returned doc is a proper DOM tree');
 
-warn $dom->toString;
-
-done_testing();
-
-=cut
-
-my $xt = $template->xml_tester( xml => $dom->toString );
-
-ok( $xt );
-
-$xt->ok( '/page', 'Root element is "page"' );
-
-$xt->ok( '/page[@title]', 'Root element has a "title" attribute' );
-
-$xt->is( 'count(/page/p)', 1, '"page" element has on "p" child' );
-
-warn $dom->toString(1);
+#warn $dom->toString;
 
 done_testing();
