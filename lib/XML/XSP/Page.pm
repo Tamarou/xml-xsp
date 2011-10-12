@@ -33,7 +33,7 @@ sub add_element_node {
     my ( $document, $parent_node, $tag_name, $ns_uri ) = @_;
     my $e = undef;
 
-    if ( length $ns_uri ) {
+    if ( $ns_uri && length $ns_uri ) {
         $e = $document->createElementNS( $ns_uri, $tag_name );
     }
     else {

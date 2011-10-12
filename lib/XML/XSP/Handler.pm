@@ -117,7 +117,7 @@ sub start_element {
     #warn Dumper( $e );
 
     # hand off to to the taglib if one is registered
-    if ( length $e->{NamespaceURI} && $e->{NamespaceURI} eq $self->xsp_namespace ) {
+    if ( $e->{NamespaceURI} && $e->{NamespaceURI} eq $self->xsp_namespace ) {
         $self->manage_text;
         $self->add_to_package( $self->core_handler->start_element( $e ) );
     }
@@ -145,7 +145,7 @@ sub end_element {
     my ($self, $e ) = @_;
 
     # hand off to to the taglib if one is registered
-    if ( length $e->{NamespaceURI} && $e->{NamespaceURI} eq $self->xsp_namespace ) {
+    if ( $e->{NamespaceURI} && $e->{NamespaceURI} eq $self->xsp_namespace ) {
         $self->add_to_package( $self->core_handler->end_element( $e ) );
     }
     else {
@@ -169,7 +169,7 @@ sub characters {
 
 
     if ( $context_element &&
-         length $context_element->{NamespaceURI} &&
+         $context_element->{NamespaceURI} &&
          $context_element->{NamespaceURI} eq $self->xsp_namespace ) {
 
         $self->add_to_package($self->core_handler->characters( $text ));

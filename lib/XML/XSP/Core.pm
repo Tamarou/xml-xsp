@@ -177,7 +177,7 @@ sub end_element {
         }
         when ( 'expr' ) {
             my $parent_ns = $parent->{NamespaceURI};
-            if ( length $parent_ns && $parent_ns eq $self->xsp_namespace && $parent->{LocalName} !~ /(content|element)/) {
+            if ( $parent_ns && $parent_ns eq $self->xsp_namespace && $parent->{LocalName} !~ /(content|element)/) {
                 $code .= '} ';
 
             }
